@@ -45,4 +45,7 @@ You should probably install ShareX. That's pretty important.
   12. On the bottom left, make sure all uploaders are set to your new proxy.
   13. (optional) Press the `test` button next to your uploader. It should give you a link.
   
+It should look something like this.
+![](https://i.imgur.com/LOIdRyt.png)
+  
 You're done!
