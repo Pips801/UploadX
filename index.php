@@ -8,6 +8,7 @@ It's a mess, I know , but the goal was a single file.
 
 DONE:
     - json file that stores data that can be edited by the user via the script
+    - regenerate json datafile and .htaccess file when the script is first started or the files are deleted.
     - web panel for 
     - security
         - admin password preventing users from modifying settings
@@ -18,7 +19,7 @@ DONE:
         - sessions
     - administration
         - create accounts
-        - set the maximum file size allowed per user and globaly (not allowed)
+        - set the maximum file size allowed per user and globaly (not implimented yet)
         - enable and disable accounts
         - delete accounts
         - view number of files uploaded for each user
@@ -31,16 +32,44 @@ TODO:
     - check if password hash is still the default password. if it is, then prompt to change it
     - double check password when changing
     - style the shit out of it
+    
 */
 
+// regenerate the datafile
 if(!file_exists('./data.json')){
     
+    file_put_contents('./data.json', '{"Settings":{"number_of_chars":4,"file_name_mode":1,"rename_attempts":20,"debug":false,"index_message":"This is a development ShareX Proxy script. This message should be changed before releasing.","default_upload_limit":50,"PW_hash":"5f4dcc3b5aa765d61d8327deb882cf99"},"Users":[]}');
     
+    echo('datafile was missing, restored from default. Password is <b>password</b>, please change it.');
     
+}
+
+// create the htaccess file to protect the datafile
+if(!file_exists('./.htaccess')){
+    
+    file_put_contents('./.htaccess', '<Files "data.json">
+Order Allow,Deny
+Deny from all
+</Files>
+<Files "links.json">
+Order Allow,Deny
+Deny from all
+</Files>
+RewriteEngine on  
+RewriteCond %{REQUEST_FILENAME} !-f  
+RewriteCond %{REQUEST_FILENAME} !-d  
+RewriteRule ^(.*)$ ./index.php?id=$1 [L,QSA]');
+    
+}
+
+if(!file_exists('./links.json')){
+     file_put_contents('./links.json', '{}');
 }
 
 // grab json data from the file.
 $json = json_decode(file_get_contents("data.json"), true);
+$links = json_decode(file_get_contents("links.json"), true);
+    
 
 /*
 
@@ -124,26 +153,50 @@ FILE HANDLING
         $error_message = "You are not allowed to upload.";
     }
     
+    // set some vars
     $file_name = $_FILES['file']['name'];
     $file_temp_name = $_FILES['file']['tmp_name'];
     $extension = pathinfo($file_temp_name . $file_name, PATHINFO_EXTENSION);
-    $new_file_name = generate_file_name() . "." . $extension;
     
-    if(move_uploaded_file($file_temp_name, './' . $new_file_name)){
-        
-        $json['Users'][$user]['uploads']++;
-        save_json();
-        
-        header( 'Location: ./' . $new_file_name);
-    }else{
-        $upload_ok = false;
-        $error_message = "There was an error saving the file.";
-    }
+    $file_id = generate_file_name();
     
-    if(!$upload_ok){
-        echo("Error: $error_message");
+    $new_file_name = $file_id . "." . $extension;
+    
+    $new_file_location = './uploads/' . $new_file_name;
+    
+    // show error
+    if($upload_ok){
+    
+    // attempt to create/move the file
+        if(move_uploaded_file($file_temp_name, $new_file_location)){
+
+            //update users upload count 
+            $json['Users'][$user]['uploads']++;
+            $links[$file_id]['actual_file'] = $new_file_location;
+            $links[$file_id]['uploader'] = $user;
+            $links[$file_id]['times_accessed'] = 0;
+            save_json();
+
+            // redirect to the file
+            header( 'Location: ./' . $file_id);
+
+        }else{
+            $upload_ok = false;
+            $error_message = "There was an error saving the file.";
+        }
+    
     }
             
+    
+
+} 
+else if (isset($_GET['id'])){
+    
+    $links[$_GET['id']]['times_accessed']++;
+    save_json();
+    
+    echo ("<center><img src='{$links[$_GET['id']]['actual_file']}'><br>Uploader: {$links[$_GET['id']]['uploader']}<br>Views: {$links[$_GET['id']]['times_accessed']}<center>");
+    
     
     
 }
@@ -348,7 +401,15 @@ foreach(get_users() as $user){
         <input type="hidden" name="action" value="create">
     </form>
 
+
 <h1>Change admin password</h1>
+
+<?php
+    
+    if($json['Settings']['PW_hash'] === '5f4dcc3b5aa765d61d8327deb882cf99')
+        echo '<h3 style="color:red">Your password is password. Please change it.</h3>';
+    ?>
+
 <form action="./" method="post">
     Old password:
     <input type="password" name='old_password' required>
@@ -461,8 +522,10 @@ function edit_user($user_name, $max_filesize, $can_upload){
 function save_json(){
     
     global $json;
+    global $links;
     
     file_put_contents('data.json', json_encode($json));
+    file_put_contents('links.json', json_encode($links));
     
 }
 
