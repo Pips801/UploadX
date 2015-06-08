@@ -66,6 +66,10 @@ if(!file_exists('./links.json')){
      file_put_contents('./links.json', '{}');
 }
 
+if(!file_exists('./uploads/')){
+    mkdir('./uploads/');
+}
+
 // grab json data from the file.
 $json = json_decode(file_get_contents("data.json"), true);
 $links = json_decode(file_get_contents("links.json"), true);
@@ -192,11 +196,15 @@ FILE HANDLING
 } 
 else if (isset($_GET['id'])){
     
+    if(isset($links[$_GET['id']])){
+    
     $links[$_GET['id']]['times_accessed']++;
     save_json();
     
     echo ("<center><img src='{$links[$_GET['id']]['actual_file']}'><br>Uploader: {$links[$_GET['id']]['uploader']}<br>Views: {$links[$_GET['id']]['times_accessed']}<center>");
-    
+    }else{
+        echo("That file does not exist.");
+    }
     
     
 }
