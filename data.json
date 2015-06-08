@@ -1,0 +1,14 @@
+{
+    "Settings": {
+        "number_of_chars": 4,
+        "file_name_mode": 1,
+        "rename_attempts": 20,
+        "debug": false,
+        "index_message": "This is a development ShareX Proxy script. This message should be changed before releasing.",
+        "default_upload_limit": 50,
+        "PW_hash": "5f4dcc3b5aa765d61d8327deb882cf99"
+    },
+    "Users": {
+        }
+    }
+}

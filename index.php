@@ -1,115 +1,514 @@
-<?php 
+<?php
 
-## Security key
-#
-# The key that allows you to upload. This key and the key set inside ShareX needs to be the same for the upload to work. Change this to whatever you want.
-$key = "CHANGEME";
+/*
+this code was hard to write
+so it should be hard to read
 
-## The number of characters to use when generating a file name.
-#
-# The more users you have/files you push, the higher this number should be. 
-# If you're using alphanumeric characters ($file_name_mode = 1), and set the number of characters to 4, that means you have 14,776,336 file possibilities before you run out.
-# Changing this will not effect other files. All previous links to files will work.
-# recommended: 3-5.
-$number_of_chars = 4;
+It's a mess, I know , but the goal was a single file.
 
-# The mode that the script generates file names.
-#
-# Changing this will not effect other files. All previous links to files will work.
-# 1 - Use random alphanumeric characters. A-Z, a-z, and 0-9. This has 62^x (x being number of chars) possible generations before it runs out. This has the most.
-# 2 - Use only uppercase letters. A-Z. This has 26^x (x being number of chars) possible generations before it runs out.
-# 3 - Use only lowercase letters. a-z. This has 26^x (x being number of chars) possible generations before it runs out.
-# 4 - Use only numbers. 0-9. This has 10^x (x being number of chars) possible generations before it runs out. This has the least.
-$file_name_mode = 1; 
-
-## Rename Attempts
-#
-# The ammount of times the script tries to rename the file if it already exists. This does not need to be that high unless you have a lot of files.
-# Do not change this unless you understand the use of it.
-$rename_attempts = 20;
-
-## Debug mode.
-#
-# Enable this if you want to see debug features, including the PHP features. 
-# This is only needed if there are errors saving the file, with name generation, etc.
-$debug = false;
-
-## Show upload page
-#
-# Show the upload page in the web browser when they attempt to access the index page.
-# This page is mainly used to test the server without ShareX.
-$show_upload_page = false;
-
-##No page message
-#
-# message to show when $show_upload_page is disabled.
-$no_page_message = "<br><br><center>This is a <a href='https://getsharex.com/'>ShareX</a> proxy.<br>Source can be found <a href='https://github.com/PixelPips/UploadX'>here</a>.</center>";
-
-//check if there's a file and if the key sent is the actual key.
-if(isset($_FILES['file']) and ($_POST['key'] == $key)){
+TODO:
+    - check file size
+    - either re-generate or download from the internet a replacment data.json
+    - in admin panel allow settings to be changed
+    - check if password hash is still the default password. if it is, then prompt to change it
+    - double check password when changing
     
-    // if debug is enabled, show PHP errors in the error log.
-    if($debug){
-        error_reporting(E_ALL);
-        ini_set('display_errors', 1);
-    }
     
-    //DO NOT TOUCH
-    $file = $_FILES['file']; // get the file
-    $file_name = $_FILES['file']['name']; // get the file name
-    $file_temp_loc = $_FILES['file']['tmp_name']; // get the temp location of the file
-    $file_extension = pathinfo($file_temp_loc . $file_name, PATHINFO_EXTENSION); // get the extention of the file
-    $old_file_name = $file_temp_loc ."/". $file_name;
-    $new_file_name = generateID() .'.'. $file_extension;
-  
-    $times_renamed = 0;
-    while(file_exists($new_file_name) and ($times_renamed < $rename_attempts)){
+*/
+
+if(!file_exists('./data.json')){
     
-        $new_file_name = generateID() . '.' . $file_extension;
-        $times_renamed++;
-    }
     
-    if($times_renamed < $rename_attempts){
-        
-        if(move_uploaded_file($file_temp_loc, "./" . $new_file_name)){
-
-            header( 'Location: ./' . $new_file_name) ;
-
-        }else{
-          if($debug){
-            echo("There was an error saving the file. dumping data<br>");
-            echo("\$file_name = $file_name <br>
-            \$file_temp_loc = $file_temp_loc <br>
-            \$file_extention = $file_extention <br>
-            \$old_file_name  = $old_file_name <br>
-            \$new_file_name = $new_file_name <br>
-            \$key = {$_POST['key']} <br>
-            \$file_name_mode = $file_name_mode <br>
-            \$number_of_chars = $number_of_chars <br>
-            \$rename_attempts = $rename_attempts <br>
-            \$show_upload_page = $show_upload_page <br>
-            ");
-          }
-        }
-    }
-    else{
-        echo("Couldn't generate a file name that wasn't taken. <br>Tried: {$rename_attempts} times. <br>Increase the attempts (\$rename_attempts), increase the number of characters to generate (\$number_of_chars), or change the file naming mode. (\$file_name_mode.)");
-    }
-        
-}else{
-  
-  if($show_upload_page){
-    echo '<form action="./" method="post" enctype="multipart/form-data"><input type="file" name="file"><br>key: <input type="password" name="key"><br><input type="submit" value="upload" name="submit"></form>';
-
-  }else{
-    echo ($no_page_message);
-  }
+    
 }
 
-function generateID(){
+// grab json data from the file.
+$json = json_decode(file_get_contents("data.json"), true);
 
-    global $number_of_chars,$file_name_mode;
+/*
 
+LOGIN ACTIONS
+
+*/
+
+// start a session
+session_start();
+
+// check if a session has been staretd and if the user is logged in
+if (!isset($_SESSION['loggedIn']) and (!isset($_FILES['file']))){
+    
+    // check the action
+    if(isset($_POST['action'])){
+        
+        // check the action (again)
+        if($_POST['action'] == 'login'){
+            
+            // compare md5
+            if(md5($_POST['password']) === $json['Settings']['PW_hash']){
+                
+                //log user in
+                $_SESSION['loggedIn'] = true;
+                
+                // refresh the page to show info
+                refresh();
+                
+            }else{
+                refresh();
+            }
+            
+        }
+        
+        // user is not logged in, show login page.
+    }else{
+        
+        ?>
+
+<form action="./" method="post" autocomplete="off" novalidate>
+
+    <input type="password" name="password" required>
+    <input type="submit" name="submit" value="Log in">
+    <input type=hidden name="action" value="login">
+
+</form>
+
+<?php
+        
+    }
+    
+/*    
+
+FILE HANDLING
+
+*/  
+    
+}else if (isset($_FILES['file'])){
+    
+    $upload_ok = true;
+    $error_message;
+    
+    //submit checks
+    
+    if (!isset($_POST['key'])){
+        $upload_ok = false;
+        $error_message = "Key not submitted.";
+    }
+    
+    if (!is_valid_key($_POST['key'])){
+        $upload_ok = false;
+        $error_message = "Invalid key.";
+    }
+        
+    $user = get_user_by_key($_POST['key']);
+    
+    // user checks
+    
+    if (! $json['Users'][$user]['can_upload'] ){
+        $upload_ok = false;
+        $error_message = "You are not allowed to upload.";
+    }
+    
+    $file_name = $_FILES['file']['name'];
+    $file_temp_name = $_FILES['file']['tmp_name'];
+    $extension = pathinfo($file_temp_name . $file_name, PATHINFO_EXTENSION);
+    $new_file_name = generate_file_name() . "." . $extension;
+    
+    if(move_uploaded_file($file_temp_name, './' . $new_file_name)){
+        
+        $json['Users'][$user]['uploads']++;
+        save_json();
+        
+        header( 'Location: ./' . $new_file_name);
+    }else{
+        $upload_ok = false;
+        $error_message = "There was an error saving the file.";
+    }
+    
+    if(!$upload_ok){
+        echo("Error: $error_message");
+    }
+            
+    
+    
+}
+
+
+else{
+
+/*
+
+POST ACTIONS
+
+*/
+    
+    // check if there's a submitted action
+    if(isset($_POST['action'])){
+        
+        
+        // admin is creating a user
+        if($_POST['action'] == "create"){
+            
+            // create the user with POST data
+            create_user($_POST['user'], $_POST['upload_size']);
+            
+            // tell them we created it
+            echo("Created user <b>{$_POST['user']}</b>");
+        
+        }
+        
+        
+         // admin is deleting user
+        else if($_POST['action'] == "delete"){
+            
+            // delete the user
+            delete_user($_POST['user']);
+            
+            // tell them such
+            echo("Deleted user <b>{$_POST['user']}</b>");
+
+        }
+        
+        
+        // admin is editing a user
+        else if($_POST['action'] == 'edit'){
+            
+            // input toggle boxes are stupid.
+            // instead of returning true or false for checked or unchecked, it returns "on" and null.
+            // the fuck?
+            if(!isset($_POST['can_upload']))
+                $_POST['can_upload'] = false;
+            else
+                $_POST['can_upload'] = true;
+            
+            // edit the user
+            edit_user($_POST['user'], $_POST['upload_size'], $_POST['can_upload']);
+            
+        }
+        
+        
+        // admin  is changing password
+        else if ($_POST['action'] == 'changepw'){
+            
+            if(change_password($_POST['old_password'], $_POST['new_password']))
+                echo ("Password changed.");
+            else
+                echo ("Wrong password.");
+            
+        }
+        
+
+        // log the admin out
+        else if($_POST['action'] == "logout"){
+            
+            // null the session data
+            session_destroy();
+
+            // refresh the page to take them to the login screen
+            refresh();
+
+        }
+
+    }
+    
+    ?>
+
+<center><h1>Users</h1></center>
+
+    <table border="1" style="width:100%">
+        
+        <tr style="">
+            
+            <th>Username</th>
+            <th>Access key</th>
+            <th>Uploaded files</th>
+            <th>filesize limit</th>
+            <th>Can Upload</th>
+            <th>Save</th>
+            <th>Delete user</th>
+            
+        </tr>
+        
+<?php
+
+    // loop through the users
+foreach(get_users() as $user){
+    
+    
+    ?>
+ <tr>
+
+    <td>
+        <?php echo $user; ?>
+    </td>
+
+    <td>
+        <code>
+            <?php echo $json['Users'][$user]['access_key']; ?>
+        </code>
+    </td>
+
+    <td>
+        <?php echo $json[ 'Users'][$user][ 'uploads']; ?>
+    </td>
+
+     <form action="./" method="post">
+    <td>
+         <select name="upload_size">
+             <option value="<?php echo $json[ 'Users'][$user][ 'filesize_limit']; ?>">
+                 <?php if ($json[ 'Users'][$user][ 'filesize_limit'] == 0){ echo "Unlimited"; }else{ echo $json[ 'Users'][$user][ 'filesize_limit'] . 'MB'; } ?>
+             </option>
+            <option value="0">Unlimited</option>
+            <option value="default"> default ( <?php echo $json[ 'Settings'][ 'default_upload_limit']?>MB)</option>
+            <option value="10">10MB</option>
+            <option value="20">20MB</option>
+            <option value="30">30MB</option>
+            <option value="40">40MB</option>
+            <option value="50">50MB</option>
+            <option value="60">60MB</option>
+            <option value="70">70MB</option>
+            <option value="80">80MB</option>
+            <option value="90">90MB</option>
+            <option value="100">100MB</option>
+
+        </select>
+        
+    </td>
+    <td>Can upload  <input type="checkbox" name="can_upload"  <?php if ($json[ 'Users'][$user][ 'can_upload']) echo('Checked');?>>
+    </td>
+         
+    <td>
+        <input type="submit" value="save" name="save">
+        <input type="hidden" name="action" value="edit">
+        <input type="hidden" name="user" value="<?php echo $user; ?>">
+    </td>
+         </form>
+
+    <form action='./' method='post'>
+        <td>
+            <input type='submit' name='submit' value='delete'>
+        </td>
+
+        <input type='hidden' name='action' value='delete'>
+
+        <input type='hidden' name='user' value='<?php echo $user ?>'>
+
+    </form>
+
+</tr>
+    
+    <?php
+    
+}
+
+?>
+        
+    </table>
+
+<h1>Create a user</h1>
+    <form action="./" method="post" enctype="multipart/form-data">
+        username:
+        <input type="text" name="user" required="">
+        <br>upload limit:
+
+        <select name="upload_size">
+            
+             <option value="0">Unlimited</option>
+            <option value="default"> default (
+                <?php echo $json[ 'Settings'][ 'default_upload_limit']?>MB)</option>
+            <option value="10">10MB</option>
+            <option value="20">20MB</option>
+            <option value="30">30MB</option>
+            <option value="40">40MB</option>
+            <option value="50">50MB</option>
+            <option value="60">60MB</option>
+            <option value="70">70MB</option>
+            <option value="80">80MB</option>
+            <option value="90">90MB</option>
+            <option value="100">100MB</option>
+
+        </select>
+        <br>
+        <input type="submit" value="CREATE" name="submit">
+        <input type="hidden" name="action" value="create">
+    </form>
+
+<h1>Change admin password</h1>
+<form action="./" method="post">
+    Old password:
+    <input type="password" name='old_password' required>
+<br>
+    New password:
+    <input type="password" name="new_password" required>
+    <br>
+    <input type="submit" name="submit" value="change password">
+    <input type="hidden" name="action" value="changepw">
+</form>
+<br>
+<br>
+<form action="./" method="post">
+
+    <input type="submit" name="logout" value="logout">
+    <input type="hidden" name="action" value="logout">
+
+</form>
+
+<?php
+    
+
+}
+
+/*
+
+FUNCTIONS
+
+*/
+
+
+//generate an access key that's 6 characters long.
+function generate_key(){
+    
+    $legnth = 6;
+    $set = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    
+     return substr(str_shuffle($set), 0, $legnth);
+    
+}
+
+//create the user
+function create_user($user_name, $max_filesize){
+    
+    global $json;
+    
+    //check for default filesize limit
+    if($max_filesize == "default")
+        // set it to the default
+        $max_filesize = $json["Settings"]["default_upload_limit"];
+    
+    // collect and save the user data to create
+    $json["Users"][$user_name] = [
+        "access_key" => generate_key(),
+        "filesize_limit" => $max_filesize,
+        "uploads" => 0,
+        "can_upload" => true
+    ];
+        
+        // save the new json data with the new user
+        save_json();
+    
+}
+
+// delete user
+function delete_user($user_name){
+    
+    global $json;
+    
+    // unset the user
+    unset($json["Users"][$user_name]);
+    
+    // save the new json file
+    save_json();
+    
+}
+
+// get all the users
+function get_users(){
+    
+    global $json;
+    
+    $users = [];
+    
+    // loop through the current users
+    foreach($json["Users"] as $key => $value){
+        
+        // add them to an array
+        array_push($users, $key);
+        
+    }
+    
+    return($users);
+    
+}
+
+// edit a user
+function edit_user($user_name, $max_filesize, $can_upload){
+    
+    global $json;
+    
+    $json['Users'][$user_name]['filesize_limit'] = $max_filesize;
+    $json['Users'][$user_name]['can_upload'] = $can_upload;
+    
+    save_json();
+    
+}
+
+// save the new JSON file. 
+function save_json(){
+    
+    global $json;
+    
+    file_put_contents('data.json', json_encode($json));
+    
+}
+
+function change_password($old_password, $new_password){
+    
+    global $json;
+    
+    if (md5($old_password) === $json['Settings']['PW_hash']){
+        
+        $json['Settings']['PW_hash'] = md5($new_password);
+        
+        save_json();
+        return true;
+        
+    }
+    return false;
+    
+}
+
+function is_valid_key($key){
+    
+    global $json;
+    
+    $valid_keys = [];
+    
+    foreach(get_users() as $user){
+        
+        array_push($valid_keys, $json['Users'][$user]['access_key']);
+        
+    }
+    
+    if (in_array($key, $valid_keys))
+        return true;
+    else
+        return false;
+    
+}
+
+function get_user_by_key($key){
+    
+    global $json;
+    
+    $user_from_key = null;
+    
+    foreach(get_users() as $user){
+        
+        if ($json['Users'][$user]['access_key'] == $key){
+            $user_from_key = $user;
+        }
+    }
+    
+    return $user_from_key;
+
+    
+}
+
+// generate a file name based off settings
+function generate_file_name(){
+    global $json;
+    
+    $file_name_mode = $json['Settings']['file_name_mode'];
+    $number_of_chars = $json['Settings']['number_of_chars'];
+    
     $upper_case = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $lower_case = 'abcdefghijklmnopqrstuvwxyz';
     $numeric = '0123456789';
@@ -125,13 +524,18 @@ function generateID(){
     else if($file_name_mode == 4)
         $set = $numeric;
     else{
-      if($debug)
-        echo ("\$file_name_mode is not valid. Defaulting to alphanumeric name generation<br>");
-      
       $set = $upper_case . $lower_case . $numeric;
     }
         
     return substr(str_shuffle($set), 0, $number_of_chars);
+}
+
+
+// refresh the current page
+function refresh(){
+    
+    header('Location: ./');
+    
 }
 
 ?>
