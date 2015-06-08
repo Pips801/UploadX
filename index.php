@@ -85,7 +85,7 @@ LOGIN ACTIONS
 session_start();
 
 // check if a session has been staretd and if the user is logged in
-if (!isset($_SESSION['loggedIn']) and (!isset($_FILES['file']))){
+if (!isset($_SESSION['loggedIn']) and (!isset($_FILES['file']) and (!isset($_GET['id'])))){
     
     // check the action
     if(isset($_POST['action'])){
