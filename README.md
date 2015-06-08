@@ -5,7 +5,9 @@ It's a mess, I know, but the goal was a single file.
 
 DONE:
 - json file that stores data that can be edited by the user via the script
-- web panel for 
+- web panel for administraton
+- regenerate htaccess, links.json and data.json
+- password security: it will yell at you if your password is `password`
 - security
     - admin password preventing users from modifying settings
     - users
@@ -23,8 +25,7 @@ DONE:
 
 TODO:
 - check file size
-- either re-generate or download from the internet a replacment data.json
 - in admin panel allow settings to be changed
-- check if password hash is still the default password. if it is, then prompt to change it
+
 - double check password when changing
 - style the shit out of it
