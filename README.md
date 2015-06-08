@@ -22,9 +22,9 @@ DONE:
     - change administrator password
 
 TODO:
-    - check file size
-    - either re-generate or download from the internet a replacment data.json
-    - in admin panel allow settings to be changed
-    - check if password hash is still the default password. if it is, then prompt to change it
-    - double check password when changing
-    - style the shit out of it
+- check file size
+- either re-generate or download from the internet a replacment data.json
+- in admin panel allow settings to be changed
+- check if password hash is still the default password. if it is, then prompt to change it
+- double check password when changing
+- style the shit out of it
