@@ -153,7 +153,7 @@ FILE HANDLING
             $json['Users'][$user]['uploads']++;
             $links[$file_id]['actual_file'] = $new_file_location;
             $links[$file_id]['uploader'] = $user;
-            $links[$file_id]['times_accessed'] = 0;
+            $links[$file_id]['times_accessed'] = -1; // gotta do this cause when ShareX uploads, this goes up one
             $links[$file_id]['file_type'] = $_FILES['file']['type'];
             save_json();
 
@@ -187,7 +187,7 @@ else if (isset($_GET['id'])){
         if (strpos($link_filetype,'image') !== false){
             //image
             ?>
-            <img src=' <?php echo ($link_location) ?>' width="90%">
+            <img src=' <?php echo ($link_location) ?>' style="max-width:80%;">
             <br>
              Uploader: <?php echo($link_uploader) ?><br> Views: <?php echo ($link_accessed) ?>
             <center>
