@@ -6,13 +6,13 @@ so it should be hard to read
 
 It's a mess, I know , but the goal was a single file.
 
-Read the README.md to see what still needs to be developed.
 */
 
 // regenerate the datafile
 if(!file_exists('./data.json')){
     
-    file_put_contents('./data.json', '{"Settings":{"number_of_chars":4,"file_name_mode":1,"rename_attempts":20,"debug":false,"index_message":"This is a development ShareX Proxy script. This message should be changed before releasing.","default_upload_limit":50,"PW_hash":"5f4dcc3b5aa765d61d8327deb882cf99"},"Users":[]}');
+    file_put_contents('./data.json', 
+'{"Settings":{"number_of_chars":4,"file_name_mode":1,"rename_attempts":20,"debug":false,"index_message":"This is a development ShareX Proxy script. This message should be changed before releasing.","default_upload_limit":50,"PW_hash":"5f4dcc3b5aa765d61d8327deb882cf99"},"Users":[]}');
     
     echo('datafile was missing, restored from default. Password is <b>password</b>, please change it.');
     
@@ -21,7 +21,8 @@ if(!file_exists('./data.json')){
 // create the htaccess file to protect the datafile
 if(!file_exists('./.htaccess')){
     
-    file_put_contents('./.htaccess', '<Files "data.json">
+    file_put_contents('./.htaccess', 
+'<Files "data.json">
 Order Allow,Deny
 Deny from all
 </Files>
@@ -36,12 +37,10 @@ RewriteRule ^(.*)$ ./index.php?id=$1 [L,QSA]');
     
 }
 
-// create the json file for the links
 if(!file_exists('./links.json')){
      file_put_contents('./links.json', '{}');
 }
 
-// create the upload folder
 if(!file_exists('./uploads/')){
     mkdir('./uploads/');
 }
@@ -155,6 +154,7 @@ FILE HANDLING
             $links[$file_id]['actual_file'] = $new_file_location;
             $links[$file_id]['uploader'] = $user;
             $links[$file_id]['times_accessed'] = 0;
+            $links[$file_id]['file_type'] = $_FILES['file']['type'];
             save_json();
 
             // redirect to the file
@@ -170,29 +170,59 @@ FILE HANDLING
     
 
 } 
-
-/*
-
-IMAGE REQUEST HANDLING
-
-TODO: 
-- add support for other types of files, such as text documents or videos
-- use an iframe, or hide the data source location for security.
-
-*/
-
 else if (isset($_GET['id'])){
     
     if(isset($links[$_GET['id']])){
-    
-    $links[$_GET['id']]['times_accessed']++;
-    save_json();
-    
-    echo ("<center><img src='{$links[$_GET['id']]['actual_file']}'><br>Uploader: {$links[$_GET['id']]['uploader']}<br>Views: {$links[$_GET['id']]['times_accessed']}<center>");
+        
+        $link_id = $_GET['id'];
+        
+        $links[$link_id]['times_accessed']++; save_json();
+        $link_uploader = $links[$link_id]['uploader'];
+        $link_accessed = $links[$link_id]['times_accessed'];
+        $link_location = $links[$link_id]['actual_file'];
+        $link_filetype = $links[$link_id]['file_type'];
+        
+        echo ('<center>');
+        
+        if (strpos($link_filetype,'image') !== false){
+            //image
+            ?>
+            <img src=' <?php echo ($link_location) ?>' width="90%">
+            <br>
+             Uploader: <?php echo($link_uploader) ?><br> Views: <?php echo ($link_accessed) ?>
+            <center>
+            <?php
+            
+        }else if(strpos($link_filetype,'text') !== false){
+            // text document    
+            ?>
+             <iframe src=' <?php echo ($link_location) ?>' height="70%" width="80%">
+            </iframe>
+            <br>
+            Uploader: <?php echo($link_uploader) ?><br> Views: <?php echo ($link_accessed) ?>
+            <center>
+            <?php
+            
+        }else if(strpos($link_filetype,'video') !== false){
+            // video
+            ?>
+             <video width="90%" autoplay controls>     
+                  <source src="<?php echo($link_location) ?>" type="<?php echo($link_filetype) ?>">
+            </video>
+            <br>
+             Uploader: <?php echo($link_uploader) ?><br> Views: <?php echo ($link_accessed) ?>
+            <center>
+            <?php
+                
+        }else{
+            
+            echo("Sorry, we couldn't display this file. It is either an unsupported filetype, or there was an error somewhere.");
+            
+        }
+        
     }else{
         echo("That file does not exist.");
     }
-    
     
 }
 
@@ -322,18 +352,6 @@ foreach(get_users() as $user){
                  <?php if ($json[ 'Users'][$user][ 'filesize_limit'] == 0){ echo "Unlimited"; }else{ echo $json[ 'Users'][$user][ 'filesize_limit'] . 'MB'; } ?>
              </option>
             <option value="0">Unlimited</option>
-            <option value="default"> default ( <?php echo $json[ 'Settings'][ 'default_upload_limit']?>MB)</option>
-            <option value="10">10MB</option>
-            <option value="20">20MB</option>
-            <option value="30">30MB</option>
-            <option value="40">40MB</option>
-            <option value="50">50MB</option>
-            <option value="60">60MB</option>
-            <option value="70">70MB</option>
-            <option value="80">80MB</option>
-            <option value="90">90MB</option>
-            <option value="100">100MB</option>
-
         </select>
         
     </td>
@@ -377,18 +395,6 @@ foreach(get_users() as $user){
         <select name="upload_size">
             
              <option value="0">Unlimited</option>
-            <option value="default"> default (
-                <?php echo $json[ 'Settings'][ 'default_upload_limit']?>MB)</option>
-            <option value="10">10MB</option>
-            <option value="20">20MB</option>
-            <option value="30">30MB</option>
-            <option value="40">40MB</option>
-            <option value="50">50MB</option>
-            <option value="60">60MB</option>
-            <option value="70">70MB</option>
-            <option value="80">80MB</option>
-            <option value="90">90MB</option>
-            <option value="100">100MB</option>
 
         </select>
         <br>
