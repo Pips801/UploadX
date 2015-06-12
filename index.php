@@ -155,6 +155,16 @@ FILE HANDLING
             $links[$file_id]['uploader'] = $user;
             $links[$file_id]['times_accessed'] = -1; // gotta do this cause when ShareX uploads, this goes up one
             $links[$file_id]['file_type'] = $_FILES['file']['type'];
+            
+            if(isset($_POST['delete']) and ($_POST['delete'] == 'true')){
+                
+                $links[$file_id]['delete_on_view'] = true;
+                
+            }else{
+                
+                $links[$file_id]['delete_on_view'] = false;
+                
+            }
             save_json();
 
             // redirect to the file
@@ -181,6 +191,7 @@ else if (isset($_GET['id'])){
         $link_accessed = $links[$link_id]['times_accessed'];
         $link_location = $links[$link_id]['actual_file'];
         $link_filetype = $links[$link_id]['file_type'];
+        $link_delete = $links[$link_id]['delete_on_view'];
         
         echo ('<center>');
         
@@ -217,6 +228,19 @@ else if (isset($_GET['id'])){
         }else{
             
             echo("Sorry, we couldn't display this file. It is either an unsupported filetype, or there was an error somewhere.");
+            
+        }
+        
+        if($link_delete){
+            if($link_accessed >= 1){
+                echo('This file is set to delete, you will not be able to access it again.');
+                
+                unset($links[$link_id]);
+                $json['Users'][$link_uploader]['uploads']--;
+               //unlink(($link_location)); we can't delete the file because when the page loads, the browser can't find a way to display it (cause it's gone).
+                
+                save_json();
+            }
             
         }
         
