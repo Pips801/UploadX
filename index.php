@@ -7,7 +7,7 @@ so it should be hard to read
 It's a mess, I know , but the goal was a single file.
 
 */
-
+session_start();
 // regenerate the datafile
 if(!file_exists('./data.json')){
     
@@ -16,24 +16,35 @@ if(!file_exists('./data.json')){
     
     echo('datafile was missing, restored from default. Password is <b>password</b>, please change it.');
     
+    session_destroy();
+    
 }
 
 // create the htaccess file to protect the datafile
 if(!file_exists('./.htaccess')){
     
     file_put_contents('./.htaccess', 
-'<Files "data.json">
+'# no indexing #
+Options -Indexes
+
+# no access to the datafile #
+<Files "data.json">
 Order Allow,Deny
 Deny from all
 </Files>
+
+# no access to the links file #
 <Files "links.json">
 Order Allow,Deny
 Deny from all
 </Files>
+
+# redirect #
 RewriteEngine on  
 RewriteCond %{REQUEST_FILENAME} !-f  
 RewriteCond %{REQUEST_FILENAME} !-d  
-RewriteRule ^(.*)$ ./index.php?id=$1 [L,QSA]');
+RewriteRule ([^/]+)(?:/)?(view)? ./index.php?id=$1&view=$2 [L,QSA]
+RewriteRule uploads\/+[^/]? / [R]');
     
 }
 
@@ -57,7 +68,7 @@ LOGIN ACTIONS
 */
 
 // start a session
-session_start();
+
 
 // check if a session has been staretd and if the user is logged in
 if (!isset($_SESSION['loggedIn']) and (!isset($_FILES['file']) and (!isset($_GET['id'])))){
@@ -156,6 +167,7 @@ FILE HANDLING
             $links[$file_id]['times_accessed'] = -1; // gotta do this cause when ShareX uploads, this goes up one
             $links[$file_id]['file_type'] = $_FILES['file']['type'];
             
+            
             if(isset($_POST['delete']) and ($_POST['delete'] == 'true')){
                 
                 $links[$file_id]['delete_on_view'] = true;
@@ -165,6 +177,8 @@ FILE HANDLING
                 $links[$file_id]['delete_on_view'] = false;
                 
             }
+            
+            $links[$file_id]['uploader_ip'] = $_SERVER['REMOTE_ADDR'];
             save_json();
 
             // redirect to the file
@@ -186,28 +200,37 @@ else if (isset($_GET['id'])){
         
         $link_id = $_GET['id'];
         
-        $links[$link_id]['times_accessed']++; save_json();
-        $link_uploader = $links[$link_id]['uploader'];
-        $link_accessed = $links[$link_id]['times_accessed'];
+       
         $link_location = $links[$link_id]['actual_file'];
         $link_filetype = $links[$link_id]['file_type'];
         $link_delete = $links[$link_id]['delete_on_view'];
         
-        echo ('<center>');
+        if( ( isset( $_GET['view'] ) ) and ( $_GET['view'] == 'view') ){
+            
+            header("Content-type: $link_filetype");
+            readfile($link_location);
+            die();
+            
+        }
         
-        if (strpos($link_filetype,'image') !== false){
+        $links[$link_id]['times_accessed']++; save_json();
+        $link_uploader = $links[$link_id]['uploader'];
+        $link_accessed = $links[$link_id]['times_accessed'];
+        
+        echo ('<center>');
+        if ( strpos($link_filetype,'image') !== false ){
             //image
             ?>
-            <img src=' <?php echo ($link_location) ?>' style="max-width:80%;">
+            <img src=' <?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]/view"; ?>' style="max-width:80%;">
             <br>
              Uploader: <?php echo($link_uploader) ?><br> Views: <?php echo ($link_accessed) ?>
             <center>
             <?php
             
-        }else if(strpos($link_filetype,'text') !== false){
+        }else if( strpos($link_filetype,'text') !== false){
             // text document    
             ?>
-             <iframe src=' <?php echo ($link_location) ?>' height="70%" width="80%">
+             <iframe src=' <?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]/view"; ?>' height="70%" width="60%">
             </iframe>
             <br>
             Uploader: <?php echo($link_uploader) ?><br> Views: <?php echo ($link_accessed) ?>
@@ -217,15 +240,19 @@ else if (isset($_GET['id'])){
         }else if(strpos($link_filetype,'video') !== false){
             // video
             ?>
-             <video width="90%" autoplay controls>     
-                  <source src="<?php echo($link_location) ?>" type="<?php echo($link_filetype) ?>">
+             <video width="75%" autoplay controls>     
+                  <source src="<?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]/view"; ?>" type="<?php echo($link_filetype) ?>">
             </video>
             <br>
              Uploader: <?php echo($link_uploader) ?><br> Views: <?php echo ($link_accessed) ?>
             <center>
             <?php
                 
-        }else{
+                
+                
+        }
+        
+        else{
             
             echo("Sorry, we couldn't display this file. It is either an unsupported filetype, or there was an error somewhere.");
             
@@ -244,7 +271,10 @@ else if (isset($_GET['id'])){
             
         }
         
-    }else{
+    }
+    
+    
+    else{
         echo("That file does not exist.");
     }
     
