@@ -1,31 +1,43 @@
-this code was hard to write
-so it should be hard to read
+# UploadX #
+A ShareX proxy
 
-It's a mess, I know, but the goal was a single file.
+## TODO ##
 
-DONE:
-- json file that stores data that can be edited by the user via the script
-- web panel for administraton
-- regenerate htaccess, links.json and data.json
-- password security: it will yell at you if your password is `password`
-- security
-    - admin password preventing users from modifying settings
-    - users
-    - user access keys, so each user gets a key that they use to let them upload
-    - filesize limit, to prevent too large of files (not implimented yet)
-    - enable and disable accounts
-    - sessions
-- administration
-    - create accounts
-    - set the maximum file size allowed per user and globaly (not allowed)
-    - enable and disable accounts
-    - delete accounts
-    - view number of files uploaded for each user
-    - change administrator password
+None of this is done, yet.
 
-TODO:
-- check file size
-- in admin panel allow settings to be changed
+### Security ###
+- Stronger password support
+- double check passwords
+- salt the passwords
+- add reset email support (maybe)
+- check hash of multiple files
+- make backups of files
+- spam protection
+- session protection
 
-- double check password when changing
-- style the shit out of it
+### Settings ###
+- color/display settings
+  - Change background color
+  - Change display messages
+  - toggle showing name
+  - toggle showing views
+  - markups for pushed code
+- modifying settings
+  - link type
+  - link length
+  - add/remove file support
+  - toggle deletion link (http://<site>/<file_id>/delete)
+  - toggle IP logging
+  - toggle actual file deletion (or just remove the link)
+  - toggle browser caching
+- setting explanations
+
+### Features ###
+- In-browser uploads viewer
+  - Sort by filetype, upload time, IP, uploader, etc.
+  - remove files from the viewer, mass remove files
+- Markup support for code/text documents (Dark soda probably)
+- Upload limits
+- Download/bandwidth limits
+- Link shortening support
+- Build client-side application that sets the ShareX settings
