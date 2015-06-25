@@ -1,0 +1,27 @@
+{
+    "generator": {
+        "characters": 4,
+        "mode": 1,
+        "retry": 20
+
+    },
+
+    "limits": {
+        "size": "100MB",
+        "count": 0,
+        "views": 0
+
+    },
+
+    "security": {
+        "username": "admin",
+        "password_hash": "5f4dcc3b5aa765d61d8327deb882cf99",
+        "last_changed": "never",
+        "disallowd_files": {
+            "php",
+            "html",
+            "js"
+        }
+    }
+
+}
