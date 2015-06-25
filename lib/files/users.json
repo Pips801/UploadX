@@ -1,20 +1,8 @@
 {
-    "Pips": {
-        "access_key": "8EH649",
-        "filesize_limit": "0",
-        "uploads": 2,
-        "can_upload": true
-    },
-    "Jade": {
-        "access_key": "8EDVF3",
-        "filesize_limit": "0",
-        "uploads": 30,
-        "can_upload": false
-    },
-    "Not Pips": {
-        "access_key": "CG64M3",
+    "USER": {
+        "access_key": "KEY",
         "filesize_limit": "100MB",
-        "uploads": 0,
-        "can_upload": true
+        "uploads": 6,
+        "enabled": true
     }
 }

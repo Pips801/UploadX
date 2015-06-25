@@ -1,0 +1,10 @@
+{
+    "FILE": {
+        "location": "/path/to/file.ext",
+        "access_count": -1,
+        "type": "image\/png",
+        "uploader": "USER",
+        "uploader_ip": "1.1.1.1",
+        "delete_after": false
+    }
+}

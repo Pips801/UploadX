@@ -1,7 +1,6 @@
 <?php 
 
 include __DIR__.'/user.php';
-include __DIR__.'/settings.php';
 
 class userHandler{
     
@@ -20,10 +19,10 @@ class userHandler{
             $access_key = $settings['access_key'];
             $filesize_limit = $settings['filesize_limit'];
             $uploads = $settings['uploads'];
-            $can_upload = $settings['can_upload'];
+            $enabled = $settings['enabled'];
             
 
-           $user = new user($username, $access_key, $filesize_limit, $uploads, $can_upload);
+           $user = new user($username, $access_key, $filesize_limit, $uploads, $enabled);
             
             array_push($this->users , $user);
         }
@@ -35,16 +34,16 @@ class userHandler{
         $access_key = $this->generateKey();
         $filesize_limit = $this->settings->getSettings()['limits']['size'];
         $uploads = 0;
-        $can_upload = true;
+        $enabled = true;
         
-        $user = new user($username, $access_key, $filesize_limit, $uploads, $can_upload);
+        $user = new user($username, $access_key, $filesize_limit, $uploads, $enabled);
         
         array_push($this->users, $user);
         
         $this->users_json[$username]['access_key'] = $access_key;
         $this->users_json[$username]['filesize_limit'] = $filesize_limit;
         $this->users_json[$username]['uploads'] = $uploads;
-        $this->users_json[$username]['can_upload'] = $can_upload;
+        $this->users_json[$username]['enabled'] = $enabled;
         
         $this->save();
         
@@ -73,10 +72,21 @@ class userHandler{
         return $this->users_json;
         
     }
+  
+  function saveUser($user){
+    
+    $this->users_json[$user->username]['access_key'] = $user->access_key;
+    $this->users_json[$user->username]['filesize_limit'] = $user->filesize_limit;
+    $this->users_json[$user->username]['uploads'] = $user->uploads;
+    $this->users_json[$user->username]['enabled'] = $user->enabled;
+    
+    $this->save();
+    
+  }
     
     function save(){
         
-        file_put_contents(__DIR__.'/files/users.json', json_encode($this->users_json));
+        file_put_contents(__DIR__.'/files/users.json', json_encode($this->users_json, JSON_PRETTY_PRINT));
         
     }
     
@@ -101,6 +111,8 @@ class userHandler{
     
     function getUserByKey($key){
         
+      if($this->isValidKey($key)){
+      
         foreach ($this->users as $u){
             
             if( $key == $u->access_key){
@@ -118,7 +130,7 @@ class userHandler{
         
     }
     
-    
+    }
 }
 
 ?>

@@ -15,6 +15,12 @@ class settings{
         return $this->settings;
         
     }
+  
+  function changeSetting($setting, $newValue){
+    
+    
+    
+  }
     
 }
 

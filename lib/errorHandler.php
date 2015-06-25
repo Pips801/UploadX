@@ -21,15 +21,22 @@ class errorHandler{
             
             return $error; 
 
+        }else{
+          // error is invalid
+          return false;
         }
 
     }
     
     public function throwError($error_code){
-        
-        $error = $this->getError($error_code);
-        
+      
+        if($error = $this->getError($error_code)){
+          
         include(__DIR__.'/templates/error_message.php');
+        }else{
+          // error is invalid, so we throw an error that says the error had an error. Yeah, I know.
+          $this->throwError('error:error');
+        }
         
     }
 }
