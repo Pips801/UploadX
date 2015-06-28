@@ -1,7 +1,5 @@
 <?php
 
-include __DIR__.'/error.php'; // include errors so we can construct the error
-
 class errorHandler{
     
     protected $error;

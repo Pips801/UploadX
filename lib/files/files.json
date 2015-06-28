@@ -1,10 +1,10 @@
 {
-    "FILE": {
-        "location": "/path/to/file.ext",
+    "png": {
+        "location": "C:\\wamp\\www\\testing\\lib\/uploads\/Bj0c.png",
         "access_count": -1,
         "type": "image\/png",
-        "uploader": "USER",
-        "uploader_ip": "1.1.1.1",
+        "uploader": "user",
+        "uploader_ip": "::1",
         "delete_after": false
     }
 }

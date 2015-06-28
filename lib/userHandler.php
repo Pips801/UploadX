@@ -1,7 +1,5 @@
 <?php 
 
-include __DIR__.'/user.php';
-
 class userHandler{
     
     protected $users;
@@ -28,6 +26,12 @@ class userHandler{
         }
         
     }
+  
+  function reload(){
+   
+    $this->__construct();
+    
+  }
     
     function createUser($username){
         
@@ -89,6 +93,18 @@ class userHandler{
         file_put_contents(__DIR__.'/files/users.json', json_encode($this->users_json, JSON_PRETTY_PRINT));
         
     }
+  
+  function deleteUser($username){
+    
+    if ($this->isUser($username)){
+      
+      unset ($this->users_json[$username]);
+      
+      $this->save();
+      
+    }
+    
+  }
     
     function isValidKey($key){
         
@@ -107,6 +123,44 @@ class userHandler{
         
         return false;
         
+    }
+  
+    function getUser($username){
+      
+      if ($this->isUser($username)){
+        
+            foreach ($this->users as $u){
+            
+              if( $username == $u->username ){
+
+                  return $u;
+
+              }else{
+
+                  return null;
+              }
+            
+        }
+        
+      }
+      
+    }
+  
+    function isUser($username){
+      
+      foreach ($this->users as $u){
+            
+            if( $username == $u->username ){
+                
+                return true;
+                
+            }else{
+                
+                return false;
+            }
+            
+        }
+      
     }
     
     function getUserByKey($key){

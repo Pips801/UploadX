@@ -72,6 +72,8 @@ class fileHandler{
       $this->files = $this->files + $link_data;
       $this->save();
       
+      header("Location: ./$file_id");
+      
     }else{
       
       $this->errorHandler->throwError('upload:error');
@@ -94,7 +96,7 @@ class fileHandler{
     
   }
   
-  function showFile($id){  
+  function showFile(){  
     
 //    //check if delete
 //    if( ($this->files[$id]['delete_after']) and ($this->files[$id]['access_count'] >= 1) ){
@@ -107,6 +109,8 @@ class fileHandler{
 //    }else if(){
 //      
 //    }
+    
+    $id = $_GET['id'];
 
       header("Content-type: " . $this->files[$id]['type']);
       readfile($this->files[$id]['location']);
@@ -120,6 +124,19 @@ class fileHandler{
       return true;
     }else{
       return false;
+    }
+    
+  }
+  
+  function getFileData($id){
+    
+    if ($this->isValidId($id)){
+      
+      return $this->files[$id];
+      
+    }
+    else{
+      return null;
     }
     
   }

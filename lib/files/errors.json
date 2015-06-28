@@ -41,10 +41,27 @@
   "action:error": {
 
     "error_code": "action:error",
-    "error_message": "There was an error somewhere. Who knows where. (we don't)",
+    "error_message": "There was an error somewhere.",
     "error_level": "USER"
 
   },
+
+  "action:badusername": {
+
+    "error_code": "action:badusername",
+    "error_message": "This user already exists.",
+    "error_level": "ADMIN"
+
+  },
+  
+  "action:nouser": {
+
+    "error_code": "action:nouser",
+    "error_message": "There is no user by that name",
+    "error_level": "ADMIN"
+
+  },
+  
 
   "action:notallowed": {
 
