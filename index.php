@@ -216,7 +216,19 @@ else if (isset($_GET['id'])){
         $links[$link_id]['times_accessed']++; save_json();
         $link_uploader = $links[$link_id]['uploader'];
         $link_accessed = $links[$link_id]['times_accessed'];
-        
+
+    /*Detect if it's day or night (for the server, gotta use jQuery for client) and apply stylesheets accordingly. 
+      Defaults to false, as the user must provide their own stylesheets. 
+    */
+    $doSwitch = true;
+    if($doSwitch != false){
+        date_default_timezone_set(file_get_contents('/etc/timezone'));
+        $time = date("H"); // Set the time in 24 hour format
+        if (07 <= $time && $time < 19) // 7:00am to 7:00pm (Day)
+            {echo('<link rel="stylesheet" href="day.css" type="text/css">');}
+            else{ echo('<link rel="stylesheet" href="night.css" type="text/css">');}
+    }
+    //Now that that's that... here's the rest of the page!
         echo ('<center>');
         if ( strpos($link_filetype,'image') !== false ){
             //image

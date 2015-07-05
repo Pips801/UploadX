@@ -12,6 +12,7 @@ DONE:
 - json file that stores data that can be edited by the user via the script
 - web panel for administraton
 - regenerate htaccess, links.json and data.json
+- yay! now, at night, you have the option to detect the **server**'s time and apply css accordingly!
 - password security: it will yell at you if your password is `password`
 - security
     - admin password preventing users from modifying settings
