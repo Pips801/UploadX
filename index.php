@@ -220,7 +220,7 @@ else if (isset($_GET['id'])){
     /*Detect if it's day or night (for the server, gotta use jQuery for client) and apply stylesheets accordingly. 
       Defaults to false, as the user must provide their own stylesheets. 
     */
-    $doSwitch = true;
+    $doSwitch = false;
     if($doSwitch != false){
         date_default_timezone_set(file_get_contents('/etc/timezone'));
         $time = date("H"); // Set the time in 24 hour format
