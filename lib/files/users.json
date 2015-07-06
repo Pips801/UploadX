@@ -1,8 +1,8 @@
 {
-    "user": {
+    "USER": {
         "access_key": "NCP4U9",
         "filesize_limit": "100MB",
-        "uploads": 4,
+        "uploads": 9,
         "enabled": true
     }
 }

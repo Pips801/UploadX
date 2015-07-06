@@ -1,17 +1,26 @@
 <?php
 
+/*
+
+@author: Pips
+
+@title: Uploader Handler
+@desc: Class that manages uploading from ShareX.
+
+*/
+
 class uploadHandler{
     
     protected $userHandler;
     protected $errorHandler;
-    protected $settings;
+    protected $settingsHandler;
     protected $fileHandler;
     
     function __construct(){
         
         $this->errorHandler = new errorHandler();
         $this->userHandler = new userHandler();
-        $this->settings = new settings();
+        $this->settingsHandler = new settingsHandler();
         $this->fileHandler = new fileHandler();
         
     }
@@ -48,7 +57,7 @@ class uploadHandler{
         
       }
       
-      if(in_array(pathinfo($_FILES['file']['tmp_name'] . $_FILES['file']['name'], PATHINFO_EXTENSION), $this->settings->getSettings()['security']['disallowed_files'])){
+      if(in_array(pathinfo($_FILES['file']['tmp_name'] . $_FILES['file']['name'], PATHINFO_EXTENSION), $this->settingsHandler->getSettings()['security']['disallowed_files'])){
       
       $this->errorHandler->throwError('upload:badextension');
       $upload_okay = false;
@@ -63,6 +72,7 @@ class uploadHandler{
         
     }
     
+    // true/fase function to make sure that somebody is uploading, and with the right 'settings'
     function checkForUpload(){
         
         if(isset($_FILES['file'])){

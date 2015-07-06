@@ -1,5 +1,14 @@
 <?php 
 
+/*
+
+@author: Pips
+
+@title: User Handler
+@desc: class that handles user creation and permission checking.
+
+*/
+
 class userHandler{
     
     protected $users;
@@ -8,10 +17,16 @@ class userHandler{
     
     function __construct(){
         
-        $this->settings = new settings();    
-        $this->users = [];
-        $this->users_json = json_decode(file_get_contents(__DIR__.'/files/users.json'), true);
+        // create settings handler to check user creation agaist settings
+        $this->settingsHandler = new settingsHandler();    
         
+        // users array
+        $this->users = [];
+        
+        // users array as raw JSON from file
+        $this->users_json = json_decode(file_get_contents(__DIR__.'/../files/users.json'), true);
+        
+        // loop through each user and create it, then add it to the $users array
         foreach ($this->users_json as $username => $settings){
             
             $access_key = $settings['access_key'];
@@ -26,17 +41,12 @@ class userHandler{
         }
         
     }
-  
-  function reload(){
-   
-    $this->__construct();
-    
-  }
-    
+
+    // create user. Should add support to limit uploads. later.
     function createUser($username){
         
         $access_key = $this->generateKey();
-        $filesize_limit = $this->settings->getSettings()['limits']['size'];
+        $filesize_limit = $this->settingsHandler->getSettings()['limits']['size'];
         $uploads = 0;
         $enabled = true;
         
@@ -54,29 +64,7 @@ class userHandler{
         
     }
     
-    private function generateKey(){
-    
-        $legnth = 6;
-        $set = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-
-        return substr(str_shuffle($set), 0, $legnth);
-        
-    
-    }
-    
-    function getUsers(){
-        
-        return $this->users;
-        
-    }
-    
-    function getUsersAsJson(){
-        
-        
-        return $this->users_json;
-        
-    }
-  
+  // this is a way that we can update a user's settings; by recreating the uesr out-of-class, then passing it here.
   function saveUser($user){
     
     $this->users_json[$user->username]['access_key'] = $user->access_key;
@@ -88,12 +76,39 @@ class userHandler{
     
   }
     
+    // this just saves the json data to the fime.
     function save(){
         
-        file_put_contents(__DIR__.'/files/users.json', json_encode($this->users_json, JSON_PRETTY_PRINT));
+        file_put_contents(__DIR__.'/../files/users.json', json_encode($this->users_json, JSON_PRETTY_PRINT));
+        
+    }
+    
+        private function generateKey(){
+    
+        $legnth = 6;
+        $set = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+
+        return substr(str_shuffle($set), 0, $legnth);
+        
+    
+    }
+    
+    // return the array of users.
+    function getUsers(){
+        
+        return $this->users;
+        
+    }
+    
+    // returns the json array of users. 
+    function getUsersAsJson(){
+        
+        
+        return $this->users_json;
         
     }
   
+    // delete a user by his/her username.
   function deleteUser($username){
     
     if ($this->isUser($username)){
@@ -106,6 +121,7 @@ class userHandler{
     
   }
     
+    // check if the given key is a valid upload key.
     function isValidKey($key){
         
         foreach ($this->users as $u){
@@ -125,6 +141,7 @@ class userHandler{
         
     }
   
+    // return the user associated to the username
     function getUser($username){
       
       if ($this->isUser($username)){
@@ -146,6 +163,7 @@ class userHandler{
       
     }
   
+    // check if the given username is an actual user.
     function isUser($username){
       
       foreach ($this->users as $u){
@@ -163,6 +181,7 @@ class userHandler{
       
     }
     
+    // return the user that has the given key.
     function getUserByKey($key){
         
       if($this->isValidKey($key)){

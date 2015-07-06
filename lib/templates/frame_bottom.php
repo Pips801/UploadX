@@ -1,3 +1,0 @@
-</center>
-</div>
-</body>

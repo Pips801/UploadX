@@ -17,7 +17,7 @@
 
 class fileHandler{
   
-  protected $settings;
+  protected $settingsHandler;
   protected $errorHandler;
   protected $userHandler;
   
@@ -25,7 +25,7 @@ class fileHandler{
   
   function __construct(){
     
-    $this->settings = new settings();
+    $this->settingsHandler = new settingsHandler();
     $this->errorHandler = new errorHandler();
     $this->userHandler = new userHandler();
     
@@ -40,11 +40,11 @@ class fileHandler{
     $ext = pathinfo($file_temp . $file_name, PATHINFO_EXTENSION);
     $file_id = $this->generateFileName();
     $new_file_name = $file_id . '.' . $ext;
-    $new_file_location = __DIR__ . $this->settings->getSettings()['security']['storage_folder'] . $new_file_name;
+    $new_file_location = __DIR__ . $this->settingsHandler->getSettings()['security']['storage_folder'] . $new_file_name;
     
     // create the upload directory if it doesn't exist
-    if(!file_exists(__DIR__ . $this->settings->getSettings()['security']['storage_folder'])){
-    mkdir(__DIR__ . $this->settings->getSettings()['security']['storage_folder']);
+    if(!file_exists(__DIR__ . $this->settingsHandler->getSettings()['security']['storage_folder'])){
+    mkdir(__DIR__ . $this->settingsHandler->getSettings()['security']['storage_folder']);
 }
     // attempt to move the file
     if(move_uploaded_file($file_temp, $new_file_location)){
@@ -143,7 +143,7 @@ class fileHandler{
   
   private function generateFileName(){
     
-    $generator_settings = $this->settings->getSettings()['generator'];   
+    $generator_settings = $this->settingsHandler->getSettings()['generator'];   
     
     $file_name_mode = $generator_settings['mode'];
     $number_of_chars = $generator_settings['characters'];

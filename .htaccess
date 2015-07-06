@@ -1,0 +1,6 @@
+# redirect #
+
+RewriteEngine on  
+RewriteCond %{REQUEST_FILENAME} !-f  
+RewriteCond %{REQUEST_FILENAME} !-d  
+RewriteRule ([^/]+)/?(view)? ./index.php?id=$1&action=$2 [L,QSA]

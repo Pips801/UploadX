@@ -2,26 +2,17 @@
 
 /*
 
-ACTIONS
- - createuser
-  args - 'username'
-  
- - deleteuser
-  args - 'username'
-  
- - edituser
-  args - 'username', ''
- - login
- - logout
- - changepassword
- - deletefile
+@author: Pips
+
+@title: Web Core.
+@desc: Class that handles all web-based requests, such as administrator settings and file viewing.
 
 */
   
 
 class webCore{
   
-  protected $settings;
+  protected $settingsHandler;
   protected $userHandler;
   protected $errorHandler;
   protected $fileHandler;
@@ -29,14 +20,15 @@ class webCore{
   function __construct(){
     
     $this->errorHandler = new errorHandler();
-    $this->settings = new settings();
+    $this->settingsHandler = new settingsHandler();
     $this->userHandler = new userHandler();
     $this->fileHandler = new fileHandler();
     
     
   }
   
-  function processRequest(){
+    // process whatever request has come in from a form with POST
+  function process(){
     
     $action = $_POST['action'];
     $message;
@@ -50,7 +42,7 @@ class webCore{
 
         $message = "Created user <b>".$_POST['username']."</b>";
 
-        include __DIR__.'/templates/notification.php';
+        include $GLOBALS['templates']['notification'];
       }else{
         
         $this->errorHandler->throwError('action:badusername');
@@ -75,6 +67,7 @@ class webCore{
       
     }
     
+      // login
     if ($action == 'login'){
       
       
@@ -83,12 +76,14 @@ class webCore{
     
   }
   
+    // should do this
   function buildPage(){
     
     
     
   }
   
+    // this build's the file viewer/preview based on GET headers.
   function buildPreview(){
     
     $id = $_GET['id'];
@@ -99,28 +94,36 @@ class webCore{
     $type = $file_data['type'];
     $uploader = $file_data['uploader'];
     $uploader_ip = $file_data['uploader_ip'];
+    $is_admin = $_SESSION['loggedin'];
+    $show_views = $this->settingsHandler->getSettings()['security']['show_views'];
     
-    include __DIR__.'/templates/frame_top.php';
+    
+    $show = true;
+        
+      // stupid way of showing the top half and bottom half of the frame.
+      include __DIR__.'/../templates/frame/frame.php';
     
     if(strpos($type,'image') !== false){
       
-      include __DIR__.'/templates/image.php';
+      include __DIR__.'/../templates/viewer/image.php';
       
     } else if(strpos($type,'text') !== false){
       
-      include __DIR__.'/templates/text.php';
+      include __DIR__.'/../templates/viewer/text.php';
       
     }else if(strpos($type,'video') !== false){
       
-      include __DIR__.'/templates/video.php';
+      include __DIR__.'/../templates/viewer/video.php';
       
     }
     
-    include __DIR__.'/templates/frame_bottom.php';
-
+   $show = false;
+        // stupid way of showing the top half and bottom half of the frame.
+        include __DIR__.'/../templates/frame/frame.php';
     
     
   }
+    
   
 }
 
