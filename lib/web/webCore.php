@@ -79,9 +79,24 @@ class webCore{
     // should do this
   function buildPage(){
     
+    if (!$_SESSION['loggedin']){
+      
+      $title = 'login page';
+      
+      include_once __DIR__.'/../templates/admin/default_header.php';
+      include_once __DIR__.'/../templates/admin/login.php';
+      
+      
+      
+    }else{
+      
+      $title;
+      
+    }
     
     
   }
+  
   
     // this build's the file viewer/preview based on GET headers.
   function buildPreview(){

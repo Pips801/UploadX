@@ -11,7 +11,7 @@ class errorHandler{
     // we get the errors dynamically instead once per load
     public function getError($error_code){
         
-        $error_codes = json_decode(file_get_contents(__DIR__.'/files/errors.json'), true); // get the errors
+        $error_codes = json_decode(file_get_contents(__DIR__.'/../files/errors.json'), true); // get the errors
 
         if(isset($error_codes[$error_code])){
             
@@ -30,7 +30,7 @@ class errorHandler{
       
         if($error = $this->getError($error_code)){
           
-        include(__DIR__.'/templates/error_message.php');
+        include(__DIR__.'/../templates/display/error_message.php');
         }else{
           // error is invalid, so we throw an error that says the error had an error. Yeah, I know.
           $this->throwError('error:error');

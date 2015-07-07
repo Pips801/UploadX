@@ -28,8 +28,6 @@ if ( (!isset($_SESSION['loggedin'])) or (!isset($_SESSION)) or (empty($_SESSION)
     $_SESSION['loggedin'] = false;
 }
 
-$_SESSION['loggedin'] = true;
-
 // somebody is uploading, so we send it to the upload handler
 if (!empty($_FILES)){
     
@@ -42,44 +40,40 @@ if (!empty($_FILES)){
     
 }
 // they're accessing a file, so we go to the file Handler.
+
+// get['action'] == view
+// get['id'] == ?
+// get['panel'] =- 
+
 else if (!empty($_GET)){
-
-  if(empty($_GET['action']) ){
   
-    if($fileHandler->isValidId($_GET['id'])){
+  // viewing file
+  if (!empty($_GET['id'])){
+    
+    // valid file
+    if ($fileHandler->isValidId($_GET['id'])){
+      if(empty($_GET['action'])){
         $webCore->buildPreview();
-
-    }else{
-      $errorHandler->throwError("action:nofile");
-    }
-  }else{
-     if($fileHandler->isValidId($_GET['id'])){
+      }else{
         $fileHandler->showFile();
-
+      }
     }else{
-      $errorHandler->throwError("action:nofile");
+       $errorHandler->throwError("action:nofile");
     }
-  }
-  
+    
+  }  
 }
 // they're performing an action, such as logging in or adding a user. Send it to the web core.
 else if ((!empty($_POST)) and (empty($_FILES))){
-  
-  
-}
-// show admin panel
-else if ( (isset($_SESSION['loggedin'])) and ($_SESSION['loggedin']) ){
-
-  
-}
-// show login page
-else if ( (!isset($_SESSION['loggedin'])) or (!$_SESSION['loggedin']) ) {
-
     
+  $webCore->process();
     
+}else {
+  
+  
+  $webCore->buildPage();
+  
 }
-
-
 
 
 ?>
