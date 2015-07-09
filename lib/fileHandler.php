@@ -95,25 +95,35 @@ class fileHandler{
     
     
   }
+  /*
+    $link_data[$file_id]['location'] = $new_file_location;
+      $link_data[$file_id]['access_count'] = -1;
+      $link_data[$file_id]['type'] = $file['type'];
+      $link_data[$file_id]['uploader'] = $uploader->username;
+      $link_data[$file_id]['uploader_ip'] = $_SERVER['REMOTE_ADDR'];
   
+  */
+    
+    
   function showFile(){  
     
-//    //check if delete
-//    if( ($this->files[$id]['delete_after']) and ($this->files[$id]['access_count'] >= 1) ){
-//      
-//      $this->deleteFile($id);
-//      
-//      // refresh the page
-//      header("Location: ./");
-//      
-//    }else if(){
-//      
-//    }
-    
     $id = $_GET['id'];
-
-      header("Content-type: " . $this->files[$id]['type']);
-      readfile($this->files[$id]['location']);
+      $id_data = $this->files[$id];
+      $location = $id_data['location'];
+      $size = filesize($location);
+      $filename = $id ."." . pathinfo($location, PATHINFO_EXTENSION);
+      $type = $id_data['type'];
+      
+      header("Content-type: $type");
+      header("Content-legnth: $size");
+      header("Connection: Keep-Alive");
+      header("Cache-control: public");
+      header("Pragma: public");
+      header("Expires: Mon, 27 Mar 2038 13:33:37 GMT");
+      header("Content-Disposition: inline; filename={$filename}; name={$filename}");
+      
+      // read the file out
+      readfile($location);
       
     
   }
