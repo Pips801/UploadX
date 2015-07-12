@@ -86,6 +86,14 @@
     "error_level": "USER"
 
   },
+    
+    "action:wrongpassword": {
+
+    "error_code": "action:wrongpassword",
+    "error_message": "Wrong password.",
+    "error_level": "USER"
+
+  },
 
   "action:userdisabled": {
 

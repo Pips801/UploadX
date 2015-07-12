@@ -27,3 +27,24 @@ body {
   text-align: center;
   
 }
+
+.center {
+    
+    margin: auto;
+    
+    
+    
+}
+
+.center_text{
+    
+    text-align: center;
+    
+}
+
+.center_image{
+    
+    display: block;
+    margin: auto;
+    
+}

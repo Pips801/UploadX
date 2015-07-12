@@ -6,7 +6,7 @@
 
   <div id="login_form" class="login">
     <form action="./" method="post" novalidate>
-      <input type="password" placeholder="password" required>&nbsp;
+      <input type="password" name="password" placeholder="password" required="required">&nbsp;
       <input type="submit" value="Log in">
       <input type="hidden" name="action" value="login">
     </form>

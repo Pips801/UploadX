@@ -31,7 +31,6 @@ class webCore{
   function process(){
     
     $action = $_POST['action'];
-    $message;
     
     // create user
     if( ($action == 'createuser') ){
@@ -40,9 +39,6 @@ class webCore{
 
         $this->userHandler->createUser($_POST['username']);
 
-        $message = "Created user <b>".$_POST['username']."</b>";
-
-        include $GLOBALS['templates']['notification'];
       }else{
         
         $this->errorHandler->throwError('action:badusername');
@@ -70,9 +66,28 @@ class webCore{
       // login
     if ($action == 'login'){
       
-      
+      $user_hash = md5($_POST['password']);
+        $server_hash = $this->settingsHandler->getSettings()['security']['password_hash'];
+        
+        if($server_hash === $user_hash){
+            $_SESSION['loggedin'] = true;
+            $this->buildPage();
+            
+        }else{
+         
+            $this->buildPage();
+            $this->errorHandler->throwError("action:wrongpassword");
+            
+        }
       
     }
+      
+      if($action == 'logout'){
+          
+          $_SESSION['loggedin'] = false;
+          $this->buildPage();
+          
+      }
     
   }
   
@@ -80,18 +95,23 @@ class webCore{
   function buildPage(){
     
     if (!$_SESSION['loggedin']){
-      
+
       $title = 'login page';
       
+        // default header
       include_once __DIR__.'/../templates/admin/default_header.php';
+        
+        // login page
       include_once __DIR__.'/../templates/admin/login.php';
-      
       
       
     }else{
       
-      $title;
-      
+      $title = "Admin Panel";
+        
+        include_once __DIR__.'/../templates/admin/default_header.php';
+        
+      include_once __DIR__.'/../templates/admin/main.php';
     }
     
     
@@ -102,19 +122,20 @@ class webCore{
   function buildPreview(){
     
     $id = $_GET['id'];
-    
     $file_data = $this->fileHandler->getFileData($id);
     
-    $src = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].'/view';
-    $type = $file_data['type'];
-    $uploader = $file_data['uploader'];
-    $uploader_ip = $file_data['uploader_ip'];
-    $is_admin = $_SESSION['loggedin'];
+    $src = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].'/view'; // file source location ( + /view)
+    $type = $file_data['type']; // filetype. This will probably need to be fixed later. PHP's $_FILE MIME type is fucked up.
+    $uploader = $file_data['uploader']; // the file uploader. Not an object, just a piece of text. 
+    $uploader_ip = $file_data['uploader_ip']; // IP of the uploader. 
+    $is_admin = $_SESSION['loggedin']; //is admin. This is used in the bottom half of frame.php
     $show_views = $this->settingsHandler->getSettings()['security']['show_views'];
+    $show_uploader = $this->settingsHandler->getSettings()['security']['show_views'];
     
-    
-    $show = true;
+    $show = true; // top half, used in frame.php. Need a better way of doing this
         
+      include_once __DIR__.'/../templates/admin/default_header.php';
+      
       // stupid way of showing the top half and bottom half of the frame.
       include __DIR__.'/../templates/frame/frame.php';
     
@@ -138,6 +159,8 @@ class webCore{
     
     
   }
+    
+    
     
   
 }

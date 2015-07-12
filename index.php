@@ -1,6 +1,9 @@
 <?php
 
-// include everything in the main file
+// debug. Will break the viewer.
+$debug = false;
+
+// include everything in the main file so the sub-classes can access it.
 include_once __DIR__.'/lib/errors/errorHandler.php';
 include_once __DIR__.'/lib/errors/error.php';
 
@@ -23,9 +26,15 @@ $uploadHandler = new uploadHandler();
 $fileHandler = new fileHandler();
 $webCore = new webCore();
 
-if ( (!isset($_SESSION['loggedin'])) or (!isset($_SESSION)) or (empty($_SESSION)) ){
-    session_start();
+session_start();
+if(!isset ($_SESSION['loggedin'])){
     $_SESSION['loggedin'] = false;
+}
+
+if ($debug){
+var_dump($_SESSION);
+var_dump($_POST);
+var_dump($_GET);
 }
 
 // somebody is uploading, so we send it to the upload handler
@@ -40,10 +49,6 @@ if (!empty($_FILES)){
     
 }
 // they're accessing a file, so we go to the file Handler.
-
-// get['action'] == view
-// get['id'] == ?
-// get['panel'] =- 
 
 else if (!empty($_GET)){
   
