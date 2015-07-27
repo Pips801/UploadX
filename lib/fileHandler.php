@@ -41,6 +41,8 @@ class fileHandler{
     $file_id = $this->generateFileName();
     $new_file_name = $file_id . '.' . $ext;
     $new_file_location = __DIR__ . $this->settingsHandler->getSettings()['security']['storage_folder'] . $new_file_name;
+    $old_name = $file_name;
+
     
     // create the upload directory if it doesn't exist
     if(!file_exists(__DIR__ . $this->settingsHandler->getSettings()['security']['storage_folder'])){
@@ -53,11 +55,13 @@ class fileHandler{
       $uploader->uploads++;
       $this->userHandler->saveUser($uploader);
       
+       $file_type = $this->getMIME($new_file_location);
       $link_data[$file_id]['location'] = $new_file_location;
-      $link_data[$file_id]['access_count'] = -1;
-      $link_data[$file_id]['type'] = $file['type'];
+      $link_data[$file_id]['access_count'] = 0;
+      $link_data[$file_id]['type'] = $file_type;
       $link_data[$file_id]['uploader'] = $uploader->username;
       $link_data[$file_id]['uploader_ip'] = $_SERVER['REMOTE_ADDR'];
+      $link_data[$file_id]['old_name'] = $old_name;
       
        if(isset($_POST['delete']) and ($_POST['delete'] == 'true')){
                 
@@ -95,24 +99,21 @@ class fileHandler{
     
     
   }
-  /*
-    $link_data[$file_id]['location'] = $new_file_location;
-      $link_data[$file_id]['access_count'] = -1;
-      $link_data[$file_id]['type'] = $file['type'];
-      $link_data[$file_id]['uploader'] = $uploader->username;
-      $link_data[$file_id]['uploader_ip'] = $_SERVER['REMOTE_ADDR'];
   
-  */
-    
-    
   function showFile(){  
     
-    $id = $_GET['id'];
+      $id = $_GET['id'];
       $id_data = $this->files[$id];
       $location = $id_data['location'];
       $size = filesize($location);
-      $filename = $id ."." . pathinfo($location, PATHINFO_EXTENSION);
+      $filename = $id_data['old_name'];
       $type = $id_data['type'];
+      
+      if(!$id_data['uploader_ip'] == $_SERVER['REMOTE_ADDR']){
+    
+      $this->files[$id]['access_count']++;
+      $this->save();
+      }
       
       header("Content-type: $type");
       header("Content-legnth: $size");
@@ -120,7 +121,7 @@ class fileHandler{
       header("Cache-control: public");
       header("Pragma: public");
       header("Expires: Mon, 27 Mar 2038 13:33:37 GMT");
-      header("Content-Disposition: inline; filename={$filename}; name={$filename}");
+      header('Content-Disposition: inline; filename="'.basename($filename).'"' );
       
       // read the file out
       readfile($location);
@@ -188,6 +189,81 @@ class fileHandler{
       
     }
     
+    
+  }
+  
+  function getMIME($filename){
+    
+            $mime_types = array(
+
+            'txt' => 'text/plain',
+            'htm' => 'text/plain',
+            'html' => 'text/plain',
+            'php' => 'text/plain',
+            'css' => 'text/plain',
+            'js' => 'text/plain',
+            'json' => 'text/plain',
+            'xml' => 'text/plain',
+            'swf' => 'application/x-shockwave-flash',
+            'flv' => 'video/x-flv',
+
+            // images
+            'png' => 'image/png',
+            'jpe' => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'jpg' => 'image/jpeg',
+            'gif' => 'image/gif',
+            'bmp' => 'image/bmp',
+            'ico' => 'image/vnd.microsoft.icon',
+            'tiff' => 'image/tiff',
+            'tif' => 'image/tiff',
+            'svg' => 'image/svg+xml',
+            'svgz' => 'image/svg+xml',
+
+            // archives
+            'zip' => 'application/zip',
+            'rar' => 'application/x-rar-compressed',
+            'exe' => 'application/x-msdownload',
+            'msi' => 'application/x-msdownload',
+            'cab' => 'application/vnd.ms-cab-compressed',
+
+            // audio/video
+            //'mp3' => 'video/mpeg',
+            'qt' => 'video/quicktime',
+            'mov' => 'video/quicktime',
+
+            // adobe
+            'pdf' => 'application/pdf',
+            'psd' => 'image/vnd.adobe.photoshop',
+            'ai' => 'application/postscript',
+            'eps' => 'application/postscript',
+            'ps' => 'application/postscript',
+
+            // ms office
+            'doc' => 'application/msword',
+            'rtf' => 'application/rtf',
+            'xls' => 'application/vnd.ms-excel',
+            'ppt' => 'application/vnd.ms-powerpoint',
+
+            // open office
+            'odt' => 'application/vnd.oasis.opendocument.text',
+            'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
+        );
+    
+          $ext = strtolower(array_pop(explode('.',$filename)));
+        if (array_key_exists($ext, $mime_types)) {
+            return $mime_types[$ext];
+        }
+        else
+          if (function_exists('finfo_open')) {
+            $finfo = finfo_open(FILEINFO_MIME);
+            $mimetype = finfo_file($finfo, $filename);
+            finfo_close($finfo);
+            return $mimetype;
+        }
+        else {
+            return 'application/octet-stream';
+        }
     
   }
   

@@ -1,1 +1,1 @@
-<iframe src=' <?php echo $src ?>'>iFrame error! sucks for you.</iframe>
+<iframe class="center_content" src=' <?php echo $src ?>'>iFrame error! sucks for you.</iframe>

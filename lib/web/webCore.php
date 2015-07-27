@@ -49,7 +49,7 @@ class webCore{
     }
     
     // delete user
-    if ($action == 'deleteuser'){
+    else if ($action == 'deleteuser'){
       
       if($this->userHandler->isUser($_POST['username'])){
         
@@ -64,7 +64,7 @@ class webCore{
     }
     
       // login
-    if ($action == 'login'){
+   else if ($action == 'login'){
       
       $user_hash = md5($_POST['password']);
         $server_hash = $this->settingsHandler->getSettings()['security']['password_hash'];
@@ -82,12 +82,90 @@ class webCore{
       
     }
       
-      if($action == 'logout'){
+      else if($action == 'logout'){
           
           $_SESSION['loggedin'] = false;
           $this->buildPage();
           
       }
+    
+    else if($action == 'settings'){
+      
+      include_once __DIR__.'/../templates/admin/default_header.php';
+      include_once __DIR__.'/../templates/admin/settings.php';
+    }
+    
+    else if($action == 'changepassword'){
+      
+      if( md5($_POST['old_password']) === $this->settingsHandler->getSettings()['security']['password_hash'] ){
+        
+        if($_POST['new_password'] === $_POST['confirm_password']){
+          
+         $this->settingsHandler->changeSetting('security', 'password_hash', md5($_POST['new_password']));
+          $this->settingsHandler->changeSetting('security', 'last_changed', date("m-d-y"));
+          
+          include_once __DIR__.'/../templates/admin/default_header.php';
+          $message = 'Password changed.';
+          include_once __DIR__.'/../templates/display/notification.php';
+          include_once __DIR__.'/../templates/admin/settings.php';
+          
+          
+        }else{
+          
+          include_once __DIR__.'/../templates/admin/default_header.php';
+          $message = 'Passwords do not match.';
+          include_once __DIR__.'/../templates/display/notification.php';
+          include_once __DIR__.'/../templates/admin/settings.php';
+          
+        }
+        
+      }else{
+        
+      include_once __DIR__.'/../templates/admin/default_header.php';
+          $message = 'Wrong password. Logging you out for security reasons.';
+          include_once __DIR__.'/../templates/display/notification.php';
+          $_SESSION['loggedin'] = false;
+        $this->buildPage();
+      }
+    }else if ($action == 'changesettings'){
+      
+       if(!isset($_POST['show_uploader']))
+                $_POST['show_uploader'] = false;
+            else
+                $_POST['show_uploader'] = true;
+      
+      if(!isset($_POST['show_views']))
+                $_POST['show_views'] = false;
+            else
+                $_POST['show_views'] = true;
+      
+      if(!isset($_POST['show_ip']))
+                $_POST['show_ip'] = false;
+            else
+                $_POST['show_ip'] = true;
+      
+      $this->settingsHandler->changeSetting('security', 'show_uploader', $_POST['show_uploader']);
+      $this->settingsHandler->changeSetting('security', 'show_views', $_POST['show_views']);
+      $this->settingsHandler->changeSetting('security', 'show_ip', $_POST['show_ip']);
+      
+      $this->settingsHandler->changeSetting('security', 'storage_folder', $_POST['save_location']);
+      
+      $this->settingsHandler->changeSetting('generator', 'characters', $_POST['generator_legnth']);
+      
+      include_once __DIR__.'/../templates/admin/default_header.php';
+        $message = 'Your changes have been saved.';
+        include_once __DIR__.'/../templates/display/notification.php';
+          include_once __DIR__.'/../templates/admin/settings.php';
+      
+      
+      
+      
+    }
+    
+    
+    else{
+      echo "unknown error";
+    }
     
   }
   
@@ -123,14 +201,12 @@ class webCore{
     
     $id = $_GET['id'];
     $file_data = $this->fileHandler->getFileData($id);
-    
+    $views = $file_data['access_count'];
     $src = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].'/view'; // file source location ( + /view)
     $type = $file_data['type']; // filetype. This will probably need to be fixed later. PHP's $_FILE MIME type is fucked up.
     $uploader = $file_data['uploader']; // the file uploader. Not an object, just a piece of text. 
     $uploader_ip = $file_data['uploader_ip']; // IP of the uploader. 
     $is_admin = $_SESSION['loggedin']; //is admin. This is used in the bottom half of frame.php
-    $show_views = $this->settingsHandler->getSettings()['security']['show_views'];
-    $show_uploader = $this->settingsHandler->getSettings()['security']['show_views'];
     
     $show = true; // top half, used in frame.php. Need a better way of doing this
         
@@ -151,6 +227,15 @@ class webCore{
       
       include __DIR__.'/../templates/viewer/video.php';
       
+    }else if(strpos($type,'audio') !== false){
+      
+      include __DIR__.'/../templates/viewer/audio.php';
+      
+    }
+    
+    
+    else{
+      include __DIR__.'/../templates/viewer/unknown.php';
     }
     
    $show = false;

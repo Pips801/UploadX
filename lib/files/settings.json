@@ -1,28 +1,24 @@
 {
     "generator": {
-        "characters": 4,
+        "characters": "4",
         "mode": 1
-
     },
-
     "limits": {
         "size": "100MB",
         "count": 0,
         "views": 0
-
     },
-
     "security": {
         "password_hash": "5f4dcc3b5aa765d61d8327deb882cf99",
-        "last_changed": "never",
-        "storage_folder": "/uploads/",
+        "last_changed": "07-27-15",
+        "storage_folder": "\/uploads\/",
         "show_uploader": true,
-        "show_views": true,
+        "show_views": false,
+        "show_ip": false,
         "disallowed_files": [
-            "php",
-            "html",
-            "js"
+            "exe",
+            "msi",
+            "scr"
         ]
     }
-
 }

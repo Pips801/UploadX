@@ -7,8 +7,6 @@
 @title: Settings Handler.
 @desc: Class that manages UploadX settings, such as security.
 
-@todo: Actually change settings.
-
 */
 
 
@@ -31,9 +29,17 @@ class settingsHandler{
     }
   
     // should do this
-  function changeSetting($setting, $newValue){
+  function changeSetting($level, $setting, $newValue){
     
-    
+    if(isset($this->settings[$level][$setting])){
+      
+      $this->settings[$level][$setting] = $newValue;
+      
+      file_put_contents(__DIR__.'/../files/settings.json', json_encode($this->settings, JSON_PRETTY_PRINT));
+      
+      $this->settings = json_decode(file_get_contents(__DIR__.'/../files/settings.json'), true);
+      
+    }
     
   }
     

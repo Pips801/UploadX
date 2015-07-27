@@ -32,10 +32,13 @@ if(!isset ($_SESSION['loggedin'])){
 }
 
 if ($debug){
+  echo ("Debugging below");
 var_dump($_SESSION);
 var_dump($_POST);
 var_dump($_GET);
+var_dump($_FILES);
 }
+
 
 // somebody is uploading, so we send it to the upload handler
 if (!empty($_FILES)){
@@ -68,6 +71,8 @@ else if (!empty($_GET)){
     
   }  
 }
+
+
 // they're performing an action, such as logging in or adding a user. Send it to the web core.
 else if ((!empty($_POST)) and (empty($_FILES))){
     

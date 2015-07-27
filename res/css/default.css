@@ -19,6 +19,14 @@ body {
   
 }
 
+h1{
+  
+  font-size: 3em; 
+  text-decoration: underline;
+  
+}
+
+
 #login_form{
   
   padding-top: 3px;
@@ -42,7 +50,7 @@ body {
     
 }
 
-.center_image{
+.center_content{
     
     display: block;
     margin: auto;

@@ -68,7 +68,10 @@ class uploadHandler{
         
         $this->fileHandler->saveFile($_FILES['file'], $uploader);
         
+      }else{
+         echo("ERROR!!!!!!!!!!!!!");
       }
+     
         
     }
     

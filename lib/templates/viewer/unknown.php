@@ -1,1 +1,1 @@
-<a href='<?php echo $src; ?>'>Download file</a>
+<a href='<?php echo $src; ?>' download>Download file</a>

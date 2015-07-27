@@ -1,1 +1,1 @@
-<img src='<?php echo $src ?>'>
+<img class="center_content" src='<?php echo $src ?>'>

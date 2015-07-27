@@ -9,17 +9,16 @@
 </head>
 
 <body>
-    <div>
-        <center>
+    <div id='display_div' class="center center_text center_content">
             <?php } else { ?>
-        </center>
 
         <center style="font-family:Verdana;">
-            <?php if($is_admin){ echo( "Uploader: $uploader<br>"); echo( "IP: $uploader_ip"); } ?>
+            <?php include __DIR__.'/../display/info_panel.php' ?>
         </center>
 
     </div>
 </body>
 
 </html>
+
 <?php } ?>
