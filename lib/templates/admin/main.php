@@ -1,22 +1,20 @@
 <div id="main_div">
 
-    <h1 class="center_text">UploadX Administrator Panel</h1>
-  
-  <form action="./" method="post">
-    
-    <input type="submit" value="settings">
-    <input type="hidden" name="action" value="settings">
-    
-  </form>
-  <form>
-    <input type="submit" value="users">
-    <input type="hidden" name="action" value="users">
-  </form>
-    
-    <form action="./" method="post">
+  <h1 class="center_text">UploadX Administrator Panel</h1>
+<div class='center_text'><h2>
+  <a href="./settings/">Settings</a>
+  <a href= "./users/">Users</a>
+  <a href= "./uploads/">Uploads</a>
+  </h2>
+  </div>
 
-        <input type="submit" value="log out">
-        <input type="hidden" name="action" value="logout">
-        
-    </form>
+
+  <form action="./" method="post" class='center_text'>
+
+    <input type="submit" value="log out">
+    <input type="hidden" name="action" value="logout">
+
+  </form>
+
+
 </div>

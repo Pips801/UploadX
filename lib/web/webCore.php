@@ -38,6 +38,8 @@ class webCore{
       if(!$this->userHandler->isUser($_POST['username'])){
 
         $this->userHandler->createUser($_POST['username']);
+        
+        
 
       }else{
         
@@ -45,6 +47,7 @@ class webCore{
         
       }
       
+       $this->buildPage("users", "");
       
     }
     
@@ -55,11 +58,15 @@ class webCore{
         
         $this->userHandler->deleteUser($_POST['username']);
         
+        
+        
       }else{
         
         $this->errorHandler->throwError('action:nouser');
         
       }
+      
+      $this->buildPage("users", "");
       
     }
     
@@ -71,11 +78,11 @@ class webCore{
         
         if($server_hash === $user_hash){
             $_SESSION['loggedin'] = true;
-            $this->buildPage();
+            $this->buildPage('main', null);
             
         }else{
          
-            $this->buildPage();
+            $this->buildPage('main', null);
             $this->errorHandler->throwError("action:wrongpassword");
             
         }
@@ -85,7 +92,7 @@ class webCore{
       else if($action == 'logout'){
           
           $_SESSION['loggedin'] = false;
-          $this->buildPage();
+          $this->buildPage('main', null);
           
       }
     
@@ -125,10 +132,13 @@ class webCore{
           $message = 'Wrong password. Logging you out for security reasons.';
           include_once __DIR__.'/../templates/display/notification.php';
           $_SESSION['loggedin'] = false;
-        $this->buildPage();
+        $this->buildPage('main', null);
       }
+      
+    // admin is changing settings.
     }else if ($action == 'changesettings'){
       
+      // we have these weird if statments to check the state of a checkbox. It doesn't reuturn true or false, it returns "checked" and null. Thanks, html.
        if(!isset($_POST['show_uploader']))
                 $_POST['show_uploader'] = false;
             else
@@ -155,9 +165,18 @@ class webCore{
       include_once __DIR__.'/../templates/admin/default_header.php';
         $message = 'Your changes have been saved.';
         include_once __DIR__.'/../templates/display/notification.php';
-          include_once __DIR__.'/../templates/admin/settings.php';
+        include_once __DIR__.'/../templates/admin/settings.php';
+    }
+    
+    //admin is viewing users
+    else if ($_POST['action'] == "deletefile"){
       
+      $this->fileHandler->deleteFile($_POST['id']);
       
+      $message = 'File deleted';
+        include_once __DIR__.'/../templates/display/notification.php';
+      
+      $this->buildPage("uploads", null);
       
       
     }
@@ -170,26 +189,48 @@ class webCore{
   }
   
     // should do this
-  function buildPage(){
-    
+  function buildPage($page, $option){
     if (!$_SESSION['loggedin']){
 
-      $title = 'login page';
-      
+      $title = 'Login page';
+          include_once __DIR__.'/../templates/admin/default_header.php';
         // default header
-      include_once __DIR__.'/../templates/admin/default_header.php';
+      
         
         // login page
       include_once __DIR__.'/../templates/admin/login.php';
       
       
+      // logic for admin page managment
+      
     }else{
       
+      if($page == 'home'){
+      
       $title = "Admin Panel";
-        
-        include_once __DIR__.'/../templates/admin/default_header.php';
-        
+            include_once __DIR__.'/../templates/admin/default_header.php';
       include_once __DIR__.'/../templates/admin/main.php';
+      }
+      else if($page == 'settings'){
+        
+        $title = 'Settings';
+        include_once __DIR__.'/../templates/admin/default_header.php';
+        include_once __DIR__.'/../templates/admin/settings.php';
+        
+      }else if($page == 'users'){
+        
+        $title = 'Users';
+        include_once __DIR__.'/../templates/admin/default_header.php';
+        include_once __DIR__.'/../templates/admin/users.php';
+        
+      }
+      else if($page == 'uploads'){
+        
+        $title = 'Uploads';
+        include_once __DIR__.'/../templates/admin/default_header.php';
+        include_once __DIR__.'/../templates/admin/uploads.php';
+        
+      }
     }
     
     
@@ -232,7 +273,6 @@ class webCore{
       include __DIR__.'/../templates/viewer/audio.php';
       
     }
-    
     
     else{
       include __DIR__.'/../templates/viewer/unknown.php';

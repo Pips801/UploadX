@@ -12,7 +12,7 @@
 class userHandler{
     
     protected $users;
-    protected $settings;
+    protected $SettingsHandler;
     protected $users_json;
     
     function __construct(){
@@ -60,6 +60,8 @@ class userHandler{
         $this->users_json[$username]['enabled'] = $enabled;
         
         $this->save();
+      
+      $this->__construct();
         
         
     }
@@ -80,6 +82,10 @@ class userHandler{
     function save(){
         
         file_put_contents(__DIR__.'/../files/users.json', json_encode($this->users_json, JSON_PRETTY_PRINT));
+      
+      $this->__construct();
+      
+      
         
     }
     
@@ -116,6 +122,7 @@ class userHandler{
       unset ($this->users_json[$username]);
       
       $this->save();
+      $this->__construct(); // re-initalize the constructor so it loads new refreshed data so we don't have to refresh the page
       
     }
     
@@ -124,20 +131,19 @@ class userHandler{
     // check if the given key is a valid upload key.
     function isValidKey($key){
         
-        foreach ($this->users as $u){
+      $valid = false;
+      
+        foreach ($this->users_json as $user){
             
-            if( $key == $u->access_key){
+            if( $key == $user['access_key']){
                 
-                return true;
+                $valid = true;
                 
-            }else{
-                
-                return false;
             }
             
         }
         
-        return false;
+      return $valid;
         
     }
   
@@ -166,18 +172,19 @@ class userHandler{
     // check if the given username is an actual user.
     function isUser($username){
       
-      foreach ($this->users as $u){
+      $valid = false;
+      
+      foreach ($this->users as $user){
             
-            if( $username == $u->username ){
+            if( $username == $user->username ){
                 
-                return true;
+                $valid = true;
                 
-            }else{
-                
-                return false;
             }
             
         }
+      
+      return $valid;
       
     }
     
@@ -186,24 +193,35 @@ class userHandler{
         
       if($this->isValidKey($key)){
       
-        foreach ($this->users as $u){
+        $user_from_key = null;
+        
+        foreach ($this->users as $user){
             
-            if( $key == $u->access_key){
+            if( $key == $user->access_key){
                 
-                return $u;
+                $user_from_key = $user;
                 
-            }else{
-                
-                return null;
             }
+          
+          
             
         }
         
-        return null;
+       return $user_from_key;
         
     }
     
     }
+  
+  function debug_dump(){
+    
+        echo '$userHandler->users';
+    var_dump($this->users);
+    
+        echo '$userHandler->users_json';
+    var_dump($this->getUserByKey('PFJ6SG'));
+    
+  }
     
 
 }

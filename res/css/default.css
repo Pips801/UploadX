@@ -56,3 +56,11 @@ h1{
     margin: auto;
     
 }
+table, th, td {
+    border: 2px solid #4b4b4b;
+    border-collapse: collapse;
+}
+th{
+  text-decoration: underline;
+}
+

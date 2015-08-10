@@ -19,6 +19,9 @@ include_once __DIR__.'/lib/fileHandler.php';
 include_once __DIR__.'/lib/web/webCore.php';
 
 
+
+$GLOBALS['home'] = 'http://' . str_replace("index.php", "", $_SERVER['SERVER_NAME'] . $_SERVER['PHP_SELF']);
+
 $errorHandler = new errorHandler();
 $userHandler = new userHandler();
 $settingsHandler = new settingsHandler();
@@ -32,11 +35,15 @@ if(!isset ($_SESSION['loggedin'])){
 }
 
 if ($debug){
-  echo ("Debugging below");
+echo '$_SESSION';
 var_dump($_SESSION);
+  echo '$_POST';
 var_dump($_POST);
+    echo '$_GET';
 var_dump($_GET);
+    echo '$_FILES';
 var_dump($_FILES);
+  
 }
 
 
@@ -54,7 +61,7 @@ if (!empty($_FILES)){
 // they're accessing a file, so we go to the file Handler.
 
 else if (!empty($_GET)){
-  
+
   // viewing file
   if (!empty($_GET['id'])){
     
@@ -69,19 +76,31 @@ else if (!empty($_GET)){
        $errorHandler->throwError("action:nofile");
     }
     
+  }else if(isset($_GET['page'])){
+    
+    if (!empty($_POST)){
+      $webCore->process();
+    }
+    
+    
+    else if(empty($_GET['page']) ){
+      
+      $webCore->buildPage('home', '');
+      
+    }else{
+      
+      $webCore->buildPage($_GET['page'], $_GET['opt']);
+      
+    }
+    
+  }else{
+    echo "404";
   }  
 }
 
-
-// they're performing an action, such as logging in or adding a user. Send it to the web core.
-else if ((!empty($_POST)) and (empty($_FILES))){
-    
-  $webCore->process();
-    
-}else {
-  
-  
-  $webCore->buildPage();
+else {
+include_once "/lib/templates/admin/default_header.php";
+include_once "/lib/templates/admin/homepage.php";
   
 }
 

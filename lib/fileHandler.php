@@ -94,6 +94,7 @@ class fileHandler{
       unset($this->files[$id]);
       
       $this->save();
+      $this->__construct();
       
     }
     
@@ -271,6 +272,12 @@ class fileHandler{
     
     file_put_contents(__DIR__.'/files/files.json', json_encode($this->files, JSON_PRETTY_PRINT));
     $this->files = json_decode(file_get_contents(__DIR__.'/files/files.json'), true);
+    
+  }
+  
+  function getJsonData(){
+    
+    return $this->files;
     
   }
   
