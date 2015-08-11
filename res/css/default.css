@@ -26,6 +26,16 @@ h1{
   
 }
 
+a {
+  color:blue
+}
+
+
+
+a:visited { 
+  text-decoration: none; color:blue;
+}
+
 
 #login_form{
   

@@ -47,8 +47,9 @@ class webCore{
         
       }
       
-       $this->buildPage("users", "");
+       //$this->buildPage("users", "");
       
+      $this->refreshPage();
     }
     
     // delete user
@@ -66,7 +67,9 @@ class webCore{
         
       }
       
-      $this->buildPage("users", "");
+      //$this->buildPage("users", "");
+      
+      $this->refreshPage();
       
     }
     
@@ -78,11 +81,16 @@ class webCore{
         
         if($server_hash === $user_hash){
             $_SESSION['loggedin'] = true;
-            $this->buildPage('main', null);
+          
+            //$this->buildPage('home', null);
+          
+          $this->refreshPage();
             
         }else{
          
-            $this->buildPage('main', null);
+            //$this->buildPage('home', null);
+            $this->refreshPage();
+          
             $this->errorHandler->throwError("action:wrongpassword");
             
         }
@@ -92,7 +100,9 @@ class webCore{
       else if($action == 'logout'){
           
           $_SESSION['loggedin'] = false;
-          $this->buildPage('main', null);
+        
+          //$this->buildPage('home', null);
+      $this->refreshPage();
           
       }
     
@@ -101,6 +111,11 @@ class webCore{
       include_once __DIR__.'/../templates/admin/default_header.php';
       include_once __DIR__.'/../templates/admin/settings.php';
     }
+    
+    
+    //
+    // TODO: replace this with buildpage/refresh
+    //
     
     else if($action == 'changepassword'){
       
@@ -176,7 +191,8 @@ class webCore{
       $message = 'File deleted';
         include_once __DIR__.'/../templates/display/notification.php';
       
-      $this->buildPage("uploads", null);
+      //$this->buildPage("uploads", null);
+      $this->refreshPage();
       
       
     }
@@ -243,7 +259,7 @@ class webCore{
     $id = $_GET['id'];
     $file_data = $this->fileHandler->getFileData($id);
     $views = $file_data['access_count'];
-    $src = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].'/view'; // file source location ( + /view)
+    $src = $GLOBALS['home'].$id.'/view'; // file source location ( + /view)
     $type = $file_data['type']; // filetype. This will probably need to be fixed later. PHP's $_FILE MIME type is fucked up.
     $uploader = $file_data['uploader']; // the file uploader. Not an object, just a piece of text. 
     $uploader_ip = $file_data['uploader_ip']; // IP of the uploader. 
@@ -282,6 +298,12 @@ class webCore{
         // stupid way of showing the top half and bottom half of the frame.
         include __DIR__.'/../templates/frame/frame.php';
     
+    
+  }
+  
+  function refreshPage(){
+    
+    header("Location: ./");
     
   }
     

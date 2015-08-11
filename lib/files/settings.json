@@ -12,8 +12,8 @@
         "password_hash": "5f4dcc3b5aa765d61d8327deb882cf99",
         "last_changed": "never",
         "storage_folder": "\/uploads\/",
-        "show_uploader": false,
-        "show_views": true,
+        "show_uploader": true,
+        "show_views": false,
         "show_ip": false,
         "disallowed_files": [
             "exe",

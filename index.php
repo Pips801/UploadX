@@ -18,9 +18,11 @@ include_once __DIR__.'/lib/fileHandler.php';
 
 include_once __DIR__.'/lib/web/webCore.php';
 
-
-
-$GLOBALS['home'] = 'http://' . str_replace("index.php", "", $_SERVER['SERVER_NAME'] . $_SERVER['PHP_SELF']);
+$connection = 'http';
+if(!empty($_SERVER['HTTPS']))
+  $connection = 'https';
+  
+$GLOBALS['home'] =  $connection . '://' . str_replace("index.php", "", $_SERVER['SERVER_NAME'] . $_SERVER['PHP_SELF']);
 
 $errorHandler = new errorHandler();
 $userHandler = new userHandler();
@@ -35,13 +37,16 @@ if(!isset ($_SESSION['loggedin'])){
 }
 
 if ($debug){
-echo '$_SESSION';
+  error_reporting(E_ALL);
+  ini_set("display_errors", 1);
+  
+echo '$_SESSION<br>';
 var_dump($_SESSION);
-  echo '$_POST';
+  echo '$_POST<br>';
 var_dump($_POST);
-    echo '$_GET';
+    echo '$_GET<br>';
 var_dump($_GET);
-    echo '$_FILES';
+    echo '$_FILES<br>';
 var_dump($_FILES);
   
 }
@@ -99,8 +104,8 @@ else if (!empty($_GET)){
 }
 
 else {
-include_once "/lib/templates/admin/default_header.php";
-include_once "/lib/templates/admin/homepage.php";
+include_once "./lib/templates/admin/default_header.php";
+include_once "./lib/templates/admin/homepage.php";
   
 }
 
