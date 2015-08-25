@@ -38,7 +38,7 @@ foreach ($users as $user){
   
   <?php
 $uploads = $this->fileHandler->getJsonData();
-$upload_count = count($uploads);+94
+$upload_count = count($uploads);
 
 
 if (!empty($_GET['opt'])){
