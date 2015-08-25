@@ -10,15 +10,22 @@
     },
     "security": {
         "password_hash": "5f4dcc3b5aa765d61d8327deb882cf99",
-        "last_changed": "never",
+        "last_changed": "08-14-15",
         "storage_folder": "\/uploads\/",
-        "show_uploader": true,
-        "show_views": false,
-        "show_ip": false,
         "disallowed_files": [
             "exe",
             "msi",
-            "scr"
+            "scr",
+            "meme",
+            "php"
         ]
+    },
+    "viewer": {
+        "show_uploader": false,
+        "show_views": false,
+        "show_ip": false,
+        "video_show_controls": true,
+        "video_loop": false,
+        "video_autoplay": true
     }
 }

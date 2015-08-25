@@ -18,12 +18,16 @@ include_once __DIR__.'/lib/fileHandler.php';
 
 include_once __DIR__.'/lib/web/webCore.php';
 
+
+// logic to detect http/https connection
 $connection = 'http';
 if(!empty($_SERVER['HTTPS']))
   $connection = 'https';
-  
+
+// global vairiable to tell the script exactly what the home url is, including http/https, sub folders, etc.
 $GLOBALS['home'] =  $connection . '://' . str_replace("index.php", "", $_SERVER['SERVER_NAME'] . $_SERVER['PHP_SELF']);
 
+// create the handlers
 $errorHandler = new errorHandler();
 $userHandler = new userHandler();
 $settingsHandler = new settingsHandler();
@@ -31,6 +35,7 @@ $uploadHandler = new uploadHandler();
 $fileHandler = new fileHandler();
 $webCore = new webCore();
 
+// session manager
 session_start();
 if(!isset ($_SESSION['loggedin'])){
     $_SESSION['loggedin'] = false;

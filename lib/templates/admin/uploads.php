@@ -1,6 +1,13 @@
 <div id='main_div'>
-<h1 class="center_text">Uploads</h1>
-  
+	<h1 class="center_text"><a class='no_color' href='<?php echo $GLOBALS['home']; ?>admin/'>Uploads</a></h1>
+  <div class='center_text'><h2>
+  <a href="<?php echo $GLOBALS['home'];?>admin/settings/">Settings</a>
+  <a href= "<?php echo $GLOBALS['home'];?>admin/users/">Users</a>
+  <a href= "<?php echo $GLOBALS['home'];?>admin/uploads/">Uploads</a>
+  </h2>
+  </div>
+
+	
   <h3>View uploads from user</h3>
   <select onChange="window.location.href=this.value">
     <option value="">Select user</option>
@@ -31,7 +38,7 @@ foreach ($users as $user){
   
   <?php
 $uploads = $this->fileHandler->getJsonData();
-$upload_count = count($uploads);
+$upload_count = count($uploads);+94
 
 
 if (!empty($_GET['opt'])){

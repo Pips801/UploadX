@@ -1,4 +1,4 @@
-<div id="login_div">
++<div id="login_div">
   <div id="login_title" class="login">
     <h1>UploadX login</h1>
   </div>

@@ -1,6 +1,14 @@
 <div id="main_div">
-<h1 class="center_text">Users</h1>
-  
+	<h1 class="center_text"><a class='no_color' href='<?php echo $GLOBALS['home']; ?>admin/'>Users</a></h1>
+  <div class='center_text'><h2>
+  <a href="<?php echo $GLOBALS['home'];?>admin/settings/">Settings</a>
+  <a href= "<?php echo $GLOBALS['home'];?>admin/users/">Users</a>
+  <a href= "<?php echo $GLOBALS['home'];?>admin/uploads/">Uploads</a>
+  </h2>
+  </div>
+
+	
+	
   <form action="./" method="post">
     
     <h2>Create a user</h2>
@@ -20,30 +28,58 @@
     <th>Access key</th>
     <th>Uploads</th>
     <th>Enabled</th>
-    <th>Delete</th>
+	 <th>Delete</th>
+	 <th>Custom uploader JSON</th>
   </tr>
     <?php 
       foreach ($this->userHandler->getUsers() as $user){
         
-        echo ("<tr>");
+        ?>
+    
+    <tr>
+
+      <td><?php echo $user->username; ?></td>
+      <td>
+		  <form action="./" method="post">
+			  <input type="text" name="key" value="<?php echo $user->access_key; ?>">
+			  <input type="hidden" name="action" value="changekey">
+			  <input type="hidden" name="username" value="<?php echo $user->username; ?>">
+		  </form>
+		  
+		  <form action="./" method="post">
+				<input type="submit" value="&#8635">
+				<input type="hidden" name="action" value="newkey">
+				<input type="hidden" name="username" value="<?php echo $user->username; ?>">
+		  </form>
+			  
+	  </td>
+      <td><?php echo $user->uploads; ?></td>
+      <td><button>FIX ME FUCKER</button></td>
+      <td>
+        <form action="./" method="post">
         
-        echo ("<td>". $user->username ."</td>");
-        echo ("<td><code>". $user->access_key ."</code></td>");
-        echo ("<td>". $user->uploads ."</td>");
-        echo ("<td>[Check box]</td>");
-        echo ("<td>"); ?>
-        <form action='./' method="post">
-        
-            <input type="submit" value='Delete'>
-            <input type="hidden" name="action" value="deleteuser">
-          <input type="hidden" name="username" value="<?php echo $user->username?>">
+          <input type="submit" value="delete">
+          <input type="hidden" name="action" value="deleteuser">
+          <input type="hidden" name="username" value="<?php echo $user->username; ?>">
+			
+			<br>delete all uploads <br>
+			delete user and uploads
           
-        </form> 
-    <?php
+        </form>
+      </td>
+		<td>
+		<form action="./" method="post">
+		
+			<input type="submit" value="Generate">
+			<input type="hidden" name="action" value="generatejson">
+			<input type="hidden" name="username" value="<?php echo $user->username; ?>">
+		
+		</form>
+		</td>
+	  </tr>
+		
+      <?php
         
-        echo("</td>");
-        
-        echo ("</tr>");
       }
     
     ?>

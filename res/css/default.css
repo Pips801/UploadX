@@ -1,12 +1,12 @@
+/* Fix fonts */
 body {
-  
+	
   font-family: SANS-SERIF;
   
 }
 
 #login_title{
   
-  padding-top: 8px;
   text-align: center;
   
   
@@ -34,6 +34,18 @@ a {
 
 a:visited { 
   text-decoration: none; color:blue;
+}
+
+a.no_color{
+	
+	color: black;
+	
+}
+
+a:hover.no_color{
+	
+	color: gray;
+	
 }
 
 
@@ -72,5 +84,9 @@ table, th, td {
 }
 th{
   text-decoration: underline;
+}
+
+form, table {
+	display:inline; margin:0px; padding:0px;
 }
 

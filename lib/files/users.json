@@ -1,3 +1,8 @@
-[
-
-]
+{
+    "Pips": {
+        "access_key": "43EC6Q",
+        "filesize_limit": "Unlimited",
+        "uploads": 0,
+        "enabled": true
+    }
+}
