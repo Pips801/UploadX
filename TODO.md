@@ -16,13 +16,13 @@
 * changepassword
 * changesettings
 * addextension
-* deleteextension
+* deleteextension (broken)
 
 ###UPLOADS
 * deletefile
 
 
-##TODO
+#TODO
 
 ###GENERAL
 * Update error handling
