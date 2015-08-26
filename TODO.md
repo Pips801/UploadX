@@ -1,46 +1,46 @@
-#`POST['action']` actions
+#POST['action'] actions
 
-##USER
+###USER
 * createuser
 * deleteuser
 
-##KEY
+###KEY
 * changekey
 * newkey
 
-##SESSION
+###SESSION
 * login
 * logout
 
-##SECURITY
+###SECURITY
 * changepassword
 * changesettings
 * addextension
 * deleteextension
 
-##UPLOADS
+###UPLOADS
 * deletefile
 
 
-#TODO
+##TODO
 
-##GENERAL
+###GENERAL
 * Update error handling
 * Find some way to make it so POSTed pages can display a message/status
 
-##FEATURES
+###FEATURES
 * URL shortening (should be pretty easy)
 
-##SETTINGS
+###SETTINGS
 * delete button for banned file types
 * Video player controls should be made or removed
 
-##USERS
+###USERS
 * enabled button needs to do something
 * delete buttons need to be coded
 * JSON generator needs made
 
-##UPLOADS
+###UPLOADS
 * Better sorting
 * Add page support so it isn't flodding 
 * Thumbnail (for use in Uploads viewer and in future updates to support REGEX from ShareX)
