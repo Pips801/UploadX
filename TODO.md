@@ -9,13 +9,16 @@ A general page to help me or any other developer figure out what is done, refere
 * URL shortening (should be pretty easy)
 
 ###SETTINGS
-* delete button for banned file types
+* Delete button for banned file types
 * Video player controls should be made or removed
 
 ###USERS
-* enabled button needs to do something
-* delete buttons need to be coded
+* Enabled button needs to do something
+* Delete buttons need to be coded
 * JSON generator needs made
+
+##SECURITY
+* Better password security than hashing.
 
 ###UPLOADS
 * Better sorting
@@ -28,6 +31,8 @@ A general page to help me or any other developer figure out what is done, refere
 * `createuser`
 * `deleteuser`
 * `generatejson` (not wirtten)
+* `enableuser` (not written)
+* `disableuser` (not written)
 
 ###KEY
 * `changekey`
@@ -45,5 +50,7 @@ A general page to help me or any other developer figure out what is done, refere
 
 ###UPLOADS
 * `deletefile`
+* `deleteuploads` (not written)
+* `deleteuploadsanduser` (not written)
 
 
