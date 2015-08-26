@@ -1,28 +1,5 @@
-#POST['action'] actions
-
-###USER
-* createuser
-* deleteuser
-
-###KEY
-* changekey
-* newkey
-
-###SESSION
-* login
-* logout
-
-###SECURITY
-* changepassword
-* changesettings
-* addextension
-* deleteextension (broken)
-
-###UPLOADS
-* deletefile
-
-
 #TODO
+A general page to help me or any other developer figure out what is done, reference code, or fix shit.
 
 ###GENERAL
 * Update error handling
@@ -44,3 +21,29 @@
 * Better sorting
 * Add page support so it isn't flodding 
 * Thumbnail (for use in Uploads viewer and in future updates to support REGEX from ShareX)
+
+#POST['action'] actions
+
+###USER
+* `createuser`
+* `deleteuser`
+* `generatejson` (not wirtten)
+
+###KEY
+* `changekey`
+* `newkey`
+
+###SESSION
+* `login`
+* `logout`
+
+###SECURITY
+* `changepassword`
+* `changesettings`
+* `addextension`
+* `deleteextension` (broken)
+
+###UPLOADS
+* `deletefile`
+
+
