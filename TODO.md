@@ -41,7 +41,7 @@ A general page to help me or any other developer figure out what is done, refere
 * `changepassword`
 * `changesettings`
 * `addextension`
-* `deleteextension` (broken)
+* `deleteextension`
 
 ###UPLOADS
 * `deletefile`
