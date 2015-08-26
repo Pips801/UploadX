@@ -79,6 +79,16 @@ class settingsHandler {
 		
 		
 	}
+	
+	function deleteExtension($ext){
+		
+		$index = array_search($ext, $this->settings['security']['disallowed_files']);
+		
+		unset($this->settings['security']['disallowed_files'][$index]);
+		
+		$this->save();
+		
+	}
     
 }
 

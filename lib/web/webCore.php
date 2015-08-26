@@ -43,14 +43,20 @@ class webCore
             $this->userHandler->createUser($_POST['username']);
             $this->refreshPage();
             
-        } else if ($action == 'addextension') {
+        } 
+		
+		else if ($action == 'addextension') {
             
             $this->settingsHandler->addExtension($_POST['extension']);
             $this->refreshPage();
             
         }
-        
-        // change user's access key
+		
+		else if ($action == 'deleteextension'){
+			
+			$this->settingsHandler->deleteExtension($_POST['extension']);
+			$this->refreshPage();
+		}
         
         else if ($action == 'changekey') {
             
@@ -59,16 +65,13 @@ class webCore
             
         }
         
-        // generate a new key
-        
         else if ($action == 'newkey') {
             
             $this->userHandler->newKey($_POST['username']);
             $this->refreshPage();
             
         }
-        
-        // delete user
+
         else if ($action == 'deleteuser') {
             
             $this->userHandler->deleteUser($_POST['username']);
@@ -76,7 +79,6 @@ class webCore
             
         }
         
-        // login
         else if ($action == 'login') {
             
             $user_hash = md5($_POST['password']);
@@ -107,7 +109,9 @@ class webCore
             $this->settingsHandler->changePassword();
             
             // admin is changing settings.
-        } else if ($action == 'changesettings') {
+        } 
+		
+		else if ($action == 'changesettings') {
             
             // we have these weird if statments to check the state of a checkbox. It doesn't reuturn true or false, it returns "checked" and null. Thanks, html.
             if (!isset($_POST['show_uploader']))
@@ -137,16 +141,10 @@ class webCore
             
         }
         
-        else if ($_POST['action'] == "deletefile") {
+        else if ($action == "deletefile") {
             
             $this->fileHandler->deleteFile($_POST['id']);
-            
-            $message = 'File deleted';
-            include_once __DIR__ . '/../templates/display/notification.php';
-            
-            //$this->buildPage("uploads", null);
-            $this->refreshPage();
-            
+            $this->refreshPage();    
             
         }
         
@@ -154,6 +152,8 @@ class webCore
         else {
             echo "unknown action: $action";
         }
+		
+		# refresh page
         
     }
     

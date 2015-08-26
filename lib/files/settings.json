@@ -15,9 +15,7 @@
         "disallowed_files": [
             "exe",
             "msi",
-            "scr",
-            "meme",
-            "php"
+            "src"
         ]
     },
     "viewer": {

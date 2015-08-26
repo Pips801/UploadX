@@ -25,16 +25,18 @@
 		  
 		  <h3>Video</h3>
 		  
-		  Loop: <br>
-		  Autoplay: <br>
 		  Show controls: <br>
+		  Autoplay: <br>
+		  Loop: <br>
+		  
+		  
 		  <br><br>
 		  <h2>Config</h2>
         <h3>Files</h3>
-        Save location: <input name='save_location' size="15" type="text" value="<?php echo($this->settingsHandler->getSettings()['security']['storage_folder']); ?>">
+        Save location: <input name='save_location' size="10" type="text" value="<?php echo($this->settingsHandler->getSettings()['security']['storage_folder']); ?>">
         <br>
         <h3>Uploads</h3>
-        ID generator legnth: <input name='generator_legnth' type="number" size="4" maxlength="2" value="<?php echo($this->settingsHandler->getSettings()['generator']['characters']); ?>">
+        ID generator legnth: <input name='generator_legnth' size="4" type="number"  maxlength="2" value="<?php echo($this->settingsHandler->getSettings()['generator']['characters']); ?>">
         <br>
 		  
 		  
@@ -54,7 +56,25 @@
 		
 		  <?php 
         foreach($this->settingsHandler->getSettings()['security']['disallowed_files'] as $value){
-          echo ("<tr><td>$value</td><td>delete</td></tr>");
+			?>
+			
+          <tr>
+			  <td><?php echo $value; ?></td>
+			  
+			  <td>
+			  	<form action="./" method="post">
+					
+					<input type="submit" value="delete">
+					<input type="hidden" name="action" value="deleteextension">
+					<input type="hidden" name="extension" value="<?php echo $value; ?>">
+					
+				</form>
+			  
+			  </td>
+		  </tr>
+			  
+			<?php
+			
         }
         ?>
 			  <tr>
