@@ -9,7 +9,6 @@ A general page to help me or any other developer figure out what is done, refere
 * URL shortening (should be pretty easy)
 
 ###SETTINGS
-* Delete button for banned file types
 * Video player controls should be made or removed
 
 ###USERS
@@ -26,31 +25,45 @@ A general page to help me or any other developer figure out what is done, refere
 * Thumbnail (for use in Uploads viewer and in future updates to support REGEX from ShareX)
 
 #POST['action'] actions
+A reference sheet to let you know what the valid post actions are.
 
 ###USER
-* `createuser`
+* `createuser`  
+  * args: `username`
 * `deleteuser`
+  * args: `username`
 * `generatejson` (not wirtten)
+  * args: `username`
 * `enableuser` (not written)
+  * args: `username`
 * `disableuser` (not written)
+  * args: `username`
 
 ###KEY
 * `changekey`
+  * args: `username`, `key`
 * `newkey`
+  * args: `username`
 
 ###SESSION
 * `login`
+  * args: `password`
 * `logout`
 
 ###SECURITY
 * `changepassword`
+  * args: `oldpassword`, `newpassword`, `confirmpassword`
 * `changesettings`
+  * args: `show_uploader`, `show_views`, `show_ip`, `save_location`, `generator_legnth` (not finished)
 * `addextension`
+  * args: `extension`
 * `deleteextension`
+  * args: `extension`
 
 ###UPLOADS
 * `deletefile`
+  * args: `id`
 * `deleteuploads` (not written)
+  * args: `username`
 * `deleteuploadsanduser` (not written)
-
-
+  * args: `username`
