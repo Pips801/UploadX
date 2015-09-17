@@ -153,7 +153,7 @@ class fileHandler{
     
   }
   
-  private function generateFileName(){
+  function generateFileName(){
     
     $generator_settings = $this->settingsHandler->getSettings()['generator'];   
     

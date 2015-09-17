@@ -1,9 +1,9 @@
 <div id='info_panel'>
 <?php 
 
-$show_uploader = $this->settingsHandler->getSettings()['security']['show_uploader'];
-$show_views = $this->settingsHandler->getSettings()['security']['show_views'];
-$show_ip = $this->settingsHandler->getSettings()['security']['show_ip']; // this should probably always be false. when enabled, it will show the uploaders IP to ANYONE.
+$show_uploader = $this->settingsHandler->getSettings()['viewer']['show_uploader'];
+$show_views = $this->settingsHandler->getSettings()['viewer']['show_views'];
+$show_ip = $this->settingsHandler->getSettings()['viewer']['show_ip']; // this should probably always be false. when enabled, it will show the uploaders IP to ANYONE.
 
 $loggedin = $_SESSION['loggedin'];
 

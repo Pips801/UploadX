@@ -1,3 +1,47 @@
-[
-
-]
+{
+    "6Gv8": {
+        "location": "C:\\wamp\\www\\UploadX\\lib\/uploads\/6Gv8.png",
+        "access_count": 0,
+        "type": "image\/png",
+        "uploader": "Pips",
+        "uploader_ip": "::1",
+        "old_name": "Test.png",
+        "delete_after": false
+    },
+    "KXVl": {
+        "location": "C:\\wamp\\www\\UploadX\\lib\/uploads\/KXVl.png",
+        "access_count": 0,
+        "type": "image\/png",
+        "uploader": "Pips",
+        "uploader_ip": "::1",
+        "old_name": "Test.png",
+        "delete_after": false
+    },
+    "cvMx": {
+        "location": "C:\\wamp\\www\\UploadX\\lib\/uploads\/cvMx.txt",
+        "access_count": 0,
+        "type": "text\/plain",
+        "uploader": "Pips",
+        "uploader_ip": "::1",
+        "old_name": "Test.txt",
+        "delete_after": false
+    },
+    "rEZI": {
+        "location": "C:\\wamp\\www\\UploadX\\lib\/uploads\/rEZI.txt",
+        "access_count": 0,
+        "type": "text\/plain",
+        "uploader": "Pips",
+        "uploader_ip": "::1",
+        "old_name": "Test.txt",
+        "delete_after": false
+    },
+    "wKf6": {
+        "location": "C:\\wamp\\www\\UploadX\\lib\/uploads\/wKf6.png",
+        "access_count": 0,
+        "type": "image\/png",
+        "uploader": "Pips",
+        "uploader_ip": "::1",
+        "old_name": "Test.png",
+        "delete_after": false
+    }
+}

@@ -106,9 +106,9 @@ class webCore
         
         else if ($action == 'changepassword') {
             
-            $this->settingsHandler->changePassword();
-            
-            // admin is changing settings.
+            $this->settingsHandler->changePassword($_POST['old_password'], $_POST['new_password'], $_POST['confirm_password']);
+			
+			
         } 
 		
 		else if ($action == 'changesettings') {
@@ -148,6 +148,11 @@ class webCore
             
         }
         
+		else if ($action == 'generatejson'){
+			
+			$this->userHandler->generateJson($_POST['username']);
+			
+		}
         
         else {
             echo "unknown action: $action";
