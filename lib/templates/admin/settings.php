@@ -23,18 +23,19 @@
         <br>
         Show IP: <input type="checkbox" name="show_ip"  <?php if ($this->settingsHandler->getSettings()['viewer']['show_ip']) echo('Checked');?>>
 		  
-		  <h3>Video</h3>
-		  
-		  Show controls: <br>
-		  Autoplay: <br>
-		  Loop: <br>
 		  
 		  
 		  <br><br>
 		  <h2>Config</h2>
         <h3>Files</h3>
         Save location: <input name='save_location' size="10" type="text" value="<?php echo($this->settingsHandler->getSettings()['security']['storage_folder']); ?>">
+		  
+		
+		  
         <br>
+		  
+		  
+		 <br> 
         <h3>Uploads</h3>
         ID generator legnth: <input name='generator_legnth' size="4" type="number"  maxlength="2" value="<?php echo($this->settingsHandler->getSettings()['generator']['characters']); ?>">
         <br>
@@ -44,8 +45,14 @@
         <input type="submit" value="Save changes">
         <input type="hidden" name="action" value="changesettings">
         <br>
-		  
+		  <br>
       </form>
+		
+<form action="./" method="post">
+	<input type="submit" value="Fix files from directory move">
+	<input type="hidden" name="action" value="fixfiles">
+	
+	</form>
 		<br><br>
 		  <h2>Banned file types</h2> 
 		  <table style="width:10%">

@@ -107,7 +107,7 @@ class webCore
         else if ($action == 'changepassword') {
             
             $this->settingsHandler->changePassword($_POST['old_password'], $_POST['new_password'], $_POST['confirm_password']);
-			
+			$this->refreshPage();
 			
         } 
 		
@@ -153,8 +153,27 @@ class webCore
 			$this->userHandler->generateJson($_POST['username']);
 			
 		}
+		
+		else if ($action == 'enable'){
+			
+			if (!isset($_POST['enabled']))
+                $_POST['enabled'] = false;
+            else
+                $_POST['enabled'] = true;
+			
+			
+			$this->userHandler->enableUser($_POST['username'], $_POST['enabled']);
+			$this->refreshPage();
+			
+		}
         
-        else {
+        else if ($action == 'fixfiles'){
+			
+			$this->fileHandler->fixFiles();
+			
+		}
+		
+		else {
             echo "unknown action: $action";
         }
 		

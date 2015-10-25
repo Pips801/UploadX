@@ -1,11 +1,13 @@
 <?php
 
+
 // debug. Will break the viewer.
 $debug = false;
 
 // include everything in the main file so the sub-classes can access it.
 include_once __DIR__.'/lib/errors/errorHandler.php';
 include_once __DIR__.'/lib/errors/error.php';
+include_once __DIR__.'/lib/errors/sanityChecker.php';
 
 include_once __DIR__.'/lib/users/userHandler.php';
 include_once __DIR__.'/lib/users/user.php';
@@ -26,6 +28,8 @@ if(!empty($_SERVER['HTTPS']))
 
 // global vairiable to tell the script exactly what the home url is, including http/https, sub folders, etc.
 $GLOBALS['home'] =  $connection . '://' . str_replace("index.php", "", $_SERVER['SERVER_NAME'] . $_SERVER['PHP_SELF']);
+$GLOBALS['dir'] = __DIR__ ;
+
 
 // create the handlers
 $errorHandler = new errorHandler();
@@ -34,6 +38,9 @@ $settingsHandler = new settingsHandler();
 $uploadHandler = new uploadHandler();
 $fileHandler = new fileHandler();
 $webCore = new webCore();
+$sanityChecker = new SanityChecker();
+
+$sanityChecker->check();
 
 // session manager
 session_start();
@@ -55,6 +62,15 @@ var_dump($_GET);
 var_dump($_FILES);
   
 }
+
+/* Testing Area */
+if($debug){
+
+
+	
+}
+/* ============ */
+
 
 
 // somebody is uploading, so we send it to the upload handler
@@ -109,6 +125,7 @@ else if (!empty($_GET)){
 }
 
 else {
+	
 include_once "./lib/templates/admin/default_header.php";
 include_once "./lib/templates/admin/homepage.php";
   

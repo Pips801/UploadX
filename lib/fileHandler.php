@@ -42,6 +42,7 @@ class fileHandler{
     $new_file_name = $file_id . '.' . $ext;
     $new_file_location = __DIR__ . $this->settingsHandler->getSettings()['security']['storage_folder'] . $new_file_name;
     $old_name = $file_name;
+	$time = date("Y-m-d h:ia");
 
     
     // create the upload directory if it doesn't exist
@@ -62,6 +63,7 @@ class fileHandler{
       $link_data[$file_id]['uploader'] = $uploader->username;
       $link_data[$file_id]['uploader_ip'] = $_SERVER['REMOTE_ADDR'];
       $link_data[$file_id]['old_name'] = $old_name;
+	  $link_data[$file_id]['upload_time'] = $time;
       
        if(isset($_POST['delete']) and ($_POST['delete'] == 'true')){
                 
@@ -85,6 +87,29 @@ class fileHandler{
     }
     
   }
+  
+  // at the request of jade
+  function fixFiles(){
+    
+    // cycle through all the files
+    foreach ($this->files as $id => $data){
+      
+      // get a new directory string for each file using some string manipulation magic and some luck
+      $fixed = __DIR__ . $this->settingsHandler->getSettings()['security']['storage_folder'] . pathinfo($data['location'], PATHINFO_BASENAME);
+      
+      // update the reference with the new data
+      $this->files[$id]['location'] = $fixed;
+      
+      // tell you we did something
+      echo $data['location'] ."  ->  ". $fixed . "<br>";
+      
+    }
+    
+    // save that shit
+    $this->save();
+    
+  }
+	
   
   function deleteFile($id){
     

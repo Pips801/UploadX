@@ -1,6 +1,6 @@
 <?php
 
-/*
+/* 
 
 @author: Pips
 
@@ -186,12 +186,15 @@ class userHandler {
 	// generate a new key for the given user
 	function newKey($username){
 		
-		$user = $this->getUser($username);
+		if ($this->isUser($username)){
 		
-		$user-> access_key = $this->generateKey();
-		
-		$this-> saveUser($user);
-		
+			$user = $this->getUser($username);
+
+			$user-> access_key = $this->generateKey();
+
+			$this-> saveUser($user);
+		}
+
 	}
     
     // check if the given key is a valid upload key.
@@ -217,19 +220,18 @@ class userHandler {
     function getUser($username) {
         
         if ($this->isUser($username)) {
-            
+			
             foreach ($this->users as $u) {
                 
                 if ($username == $u->username) {
                     
                     return $u;
                     
-                } else {
-                    
-                    return null;
                 }
                 
             }
+			
+			return null;
             
         }
         
@@ -238,19 +240,19 @@ class userHandler {
     // check if the given username is an actual user.
     function isUser($username) {
         
-        $valid = false;
+        $valid;
         
         foreach ($this->users as $user) {
             
             if ($username == $user->username) {
                 
-                $valid = true;
+                return true;
                 
             }
             
         }
         
-        return $valid;
+        return false;
         
     }
     
@@ -306,6 +308,22 @@ class userHandler {
 		
 		
 				
+	}
+	
+	function enableUser($username, $enabled){
+		
+		if($this->isUser($username)){
+			
+			$user = $this->getUser($username);
+			$user->enabled = $enabled;
+			$this->saveUser($user);
+			
+		}else{
+			
+			#not a user
+			
+		}
+		
 	}
 }
 

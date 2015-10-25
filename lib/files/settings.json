@@ -9,8 +9,8 @@
         "views": 0
     },
     "security": {
-        "password_hash": "7c6a180b36896a0a8c02787eeafb0e4c",
-        "last_changed": "09-17-15",
+        "password_hash": "5f4dcc3b5aa765d61d8327deb882cf99",
+        "last_changed": "never (it's 'password')",
         "storage_folder": "\/uploads\/",
         "disallowed_files": [
             "msi",

@@ -29,7 +29,7 @@ class errorHandler{
     public function throwError($error_code){
       
         if($error = $this->getError($error_code)){
-          
+		$message = "";	
         include(__DIR__.'/../templates/display/error_message.php');
         }else{
           // error is invalid, so we throw an error that says the error had an error. Yeah, I know.
@@ -37,6 +37,7 @@ class errorHandler{
         }
         
     }
+	
 }
 
 ?>

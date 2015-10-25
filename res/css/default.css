@@ -82,16 +82,37 @@ table, th, td {
     border: 2px solid #4b4b4b;
     border-collapse: collapse;
 }
+
+td {
+	
+	text-align: center;
+}
+
+
+
+tr:nth-child(odd) {background: #ebebeb}
+tr:nth-child(even) {background: #FFF}
+
 th{
   text-decoration: underline;
+	background: #cbcbcb
 }
 
 form, table {
 	display:inline; margin:0px; padding:0px;
 }
 
+/* Viewer */
+
 video {
 	
 	max-width: 70%;
+}
+
+iframe {
+	width: 65%;
+	height: 100%;
+	max-width: 70%;
+	
 }
 

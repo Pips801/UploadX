@@ -38,7 +38,7 @@
     
     <tr>
 
-      <td><?php echo $user->username; ?></td>
+      <td><?php echo "<a href='". $GLOBALS['home'] . 'admin/uploads/' . $user->username ."' alt='View Uploads from user'>" . $user->username . '</a>'; ?></td>
       <td>
 		  <form action="./" method="post">
 			  <input type="text" name="key" value="<?php echo $user->access_key; ?>">
@@ -54,18 +54,34 @@
 			  
 	  </td>
       <td><?php echo $user->uploads; ?></td>
-      <td><button>FIX ME FUCKER</button></td>
+      <td>
+		  <form action="./" method="post">
+		
+			<input onChange="this.form.submit()" type="checkbox" name="enabled" <?php if($user->enabled) echo 'checked'  ?>> Enable account
+			<input type="hidden" name="action" value="enable">
+			<input type="hidden" name="username" value="<?php echo $user->username; ?>">
+			
+		
+		</form>
+		</td>
       <td>
         <form action="./" method="post">
         
-          <input type="submit" value="delete">
+          <input type="submit" value="Delete">
           <input type="hidden" name="action" value="deleteuser">
           <input type="hidden" name="username" value="<?php echo $user->username; ?>">
 			
-			<br>delete all uploads <br>
-			delete user and uploads
+			&nbsp;&nbsp;&nbsp;
+		  </form>
+			<form action="./" method="post">
+			
+				<input type="submit" value="Delete Uploads">
+				<input type="hidden" name="action" value="deleteuploads"> 
+			
+			</form>
+			
           
-        </form>
+        
       </td>
 		<td>
 		<form action="./" method="post">
