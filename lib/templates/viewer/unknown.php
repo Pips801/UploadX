@@ -1,1 +1,2 @@
-<a href='<?php echo $src; ?>' download>Download file</a>
+<b style="font-size:20px;text-decoration:underline;"><?php echo $file_name; ?></b><br><br>
+<a href='<?php echo $src; ?>' download>Download file</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href='<?php echo $src; ?>'>Raw file</a>&nbsp;&nbsp;|&nbsp;&nbsp;Uploaded <?php echo $upload_time; ?>

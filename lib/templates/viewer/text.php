@@ -1,1 +1,2 @@
-<iframe class="center_content" src=' <?php echo $src ?>'>iFrame error! sucks for you.</iframe>
+<iframe id="frame" class="center_content" src=' <?php echo $src ?>'>iFrame error! sucks for you.</iframe><br><br>
+<a href='<?php echo $src; ?>' download>Download file</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href='<?php echo $src; ?>'>Raw file</a>&nbsp;&nbsp;|&nbsp;&nbsp;Uploaded <?php echo $upload_time; ?>

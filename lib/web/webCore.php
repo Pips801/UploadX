@@ -236,10 +236,12 @@ class webCore
         $id          = $_GET['id'];
         $file_data   = $this->fileHandler->getFileData($id);
         $views       = $file_data['access_count'];
-        $src         = $GLOBALS['home'] . $id . '/view'; // file source location ( + /view)
-        $type        = $file_data['type']; // filetype. This will probably need to be fixed later. PHP's $_FILE MIME type is fucked up.
+        $src         = $GLOBALS['home'] . $id . '/view'; // file source location ( + /view). Use this for actual linking
+        $type        = $file_data['type']; // filetype in MIME. THere's some extra code to figure this out.
         $uploader    = $file_data['uploader']; // the file uploader. Not an object, just a piece of text. 
         $uploader_ip = $file_data['uploader_ip']; // IP of the uploader. 
+        $upload_time = $file_data['upload_time'];
+        $file_name   = $file_data['old_name'];
         $is_admin    = $_SESSION['loggedin']; //is admin. This is used in the bottom half of frame.php
         
         $show = true; // top half, used in frame.php. Need a better way of doing this

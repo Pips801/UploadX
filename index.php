@@ -38,7 +38,7 @@ $settingsHandler = new settingsHandler();
 $uploadHandler = new uploadHandler();
 $fileHandler = new fileHandler();
 $webCore = new webCore();
-$sanityChecker = new SanityChecker();
+$sanityChecker = new SanityChecker(); // not implimented
 
 $sanityChecker->check();
 

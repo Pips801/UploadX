@@ -104,15 +104,21 @@ form, table {
 
 /* Viewer */
 
-video {
+video#frame  {
 	
 	max-width: 70%;
 }
 
-iframe {
-	width: 65%;
-	height: 100%;
+iframe#frame  {
+	width: 75%;
+	height: 95%;
 	max-width: 70%;
 	
+}
+
+img#frame {
+    
+    max-width: 80%;!
+    
 }
 

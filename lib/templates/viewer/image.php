@@ -1,1 +1,2 @@
-<img class="center_content" src='<?php echo $src ?>'>
+<img id="frame" class="center_content" src='<?php echo $src ?>'><br><br>
+<a href='<?php echo $src; ?>' download>Download file</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href='<?php echo $src; ?>'>Raw file</a>&nbsp;&nbsp;|&nbsp;&nbsp;Uploaded <?php echo $upload_time; ?>
